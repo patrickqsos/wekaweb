@@ -1,0 +1,216 @@
+{
+	"header" : {
+		"relation" : "weather.symbolic",
+		"attributes" : [
+			{
+				"name" : "outlook",
+				"type" : "nominal",
+				"class" : false,
+				"weight" : 1.0,
+				"labels" : [
+					"sunny",
+					"overcast",
+					"rainy"
+				]
+			},
+			{
+				"name" : "temperature",
+				"type" : "nominal",
+				"class" : false,
+				"weight" : 1.0,
+				"labels" : [
+					"hot",
+					"mild",
+					"cool"
+				]
+			},
+			{
+				"name" : "humidity",
+				"type" : "nominal",
+				"class" : false,
+				"weight" : 1.0,
+				"labels" : [
+					"high",
+					"normal"
+				]
+			},
+			{
+				"name" : "windy",
+				"type" : "nominal",
+				"class" : false,
+				"weight" : 1.0,
+				"labels" : [
+					"TRUE",
+					"FALSE"
+				]
+			},
+			{
+				"name" : "play",
+				"type" : "nominal",
+				"class" : true,
+				"weight" : 1.0,
+				"labels" : [
+					"yes",
+					"no"
+				]
+			}
+		]
+	},
+	"data" : [
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"sunny",
+				"hot",
+				"high",
+				"FALSE",
+				"no"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"sunny",
+				"hot",
+				"high",
+				"TRUE",
+				"no"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"overcast",
+				"hot",
+				"high",
+				"FALSE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"rainy",
+				"mild",
+				"high",
+				"FALSE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"rainy",
+				"cool",
+				"normal",
+				"FALSE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"rainy",
+				"cool",
+				"normal",
+				"TRUE",
+				"no"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"overcast",
+				"cool",
+				"normal",
+				"TRUE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"sunny",
+				"mild",
+				"high",
+				"FALSE",
+				"no"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"sunny",
+				"cool",
+				"normal",
+				"FALSE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"rainy",
+				"mild",
+				"normal",
+				"FALSE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"sunny",
+				"mild",
+				"normal",
+				"TRUE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"overcast",
+				"mild",
+				"high",
+				"TRUE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"overcast",
+				"hot",
+				"normal",
+				"FALSE",
+				"yes"
+			]
+		},
+		{
+			"sparse" : false,
+			"weight" : 1.0,
+			"values" : [
+				"rainy",
+				"mild",
+				"high",
+				"TRUE",
+				"no"
+			]
+		}
+	]
+}
+
