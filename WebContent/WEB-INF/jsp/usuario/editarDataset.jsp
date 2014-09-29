@@ -1,4 +1,3 @@
-<%@page import="weka.core.Instances"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -95,9 +94,16 @@
     	    }
     	);
     
-     
+    function test(){
+    	alert("leaving");
+    };
+	 
+    window.onbeforeunload = test;
+    
     $(document).ready(function() {
 			
+    	
+    	
 			$('#datasetList > .panel').on('hide.bs.collapse', function (e) {
 				$('> .panel-collapse > .panel-body',this).empty();
 				$(this).removeClass( "panel-primary" ).addClass( "panel-default" );
@@ -130,7 +136,7 @@
                			$('#tmplPnlInfo').tmpl(json).appendTo('#pnlInfo');
                			
                			//se llena la tabla que contienes a las instancias
-               			var newTable = ' <table class="table table-condensed table-hover"><thead><tr>'; //start building a new table contents
+               			var newTable = ' <table class="table table-condensed table-hover tableDT"><thead><tr>'; //start building a new table contents
                			for (var int = 0; int < json.dataset.header.attributes.length; int++) {
                				newTable += "<th>" + json.dataset.header.attributes[int].name + "</th>";
                    		}
@@ -146,8 +152,12 @@
                			newTable += '</tbody></table>';
                			$('#pnlInstances').html(newTable);
                			
+               			$('#pnlInstancesPrint').html(newTable);
+               			$('#pnlInstancesPrint > table').removeClass('tableDT');
+               			
+               			
                			//se da formato a la tabla usando el plugin dataTable
-               			table = $('table').DataTable( {
+               			table = $('.tableDT').DataTable( {
 						        "language": {
 						            "lengthMenu": "Mostrar _MENU_ instancias por pagina",
 						            "zeroRecords": "Ninguna instancia encontrada",
@@ -179,7 +189,8 @@
 						                    "sExtends": "print",
 						                    "sButtonText": "Imprimir",
 						                    "fnClick": function( nButton, oConfig ) {
-						                        window.print();
+						                    	//this.fnPrint( true, oConfig );
+						                    	window.print();
 						                    }
 						                },
 									]
@@ -190,6 +201,11 @@
 	               		
 	               		//se arma el formulario de instancias
 	               		var newForm = '<form role="form">';
+	               		
+	               		newForm += '<div class="alert alert-dismissible alert-danger hidden" role="alert" id="msgEditDataset">'+
+						'<button id="btnClose" type="button" class="close" onclick="$(\'.alert\').addClass(\'hidden\')"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="message">message</span>'+
+						'</div>';
+						
 	               		
 	               		for(var j=0;j<json.dataset.header.attributes.length; j++){
 	               			newForm += '<div class="form-group">';
@@ -220,9 +236,6 @@
 	               		newForm += '</form>';
 	               		
 	               		//se agrega el bntTollbar
-	               		newForm += '<div class="form-group">';
-						
-	               		
 	               		newForm += '<div id="btnToolbar" class="btn-toolbar pull-right">'+
 						'<button type="button" class="btn btn-success btn-sm btnAdd">'+
 						  '<span class="glyphicon glyphicon-plus"></span> Agregar'+
@@ -233,19 +246,9 @@
 						'<button type="button" class="btn btn-danger btn-sm btnDelete">'+
 						  '<span class="glyphicon glyphicon-trash"></span> Eliminar'+
 						'</button>'+
-						'<button type="button" class="btn btn-warning btn-sm btnTest">'+
-						  '<span class="glyphicon glyphicon-star"></span> Test'+
-						'</button>'+
 						'</div>';
 						
-						newForm += '</div>';
-						
-						
-						newForm += '<div class="alert alert-dismissible alert-danger" role="alert" id="msgAlgoritmo">'+
-						'<button id="btnClose" type="button" class="close" onclick="$(".alert").hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="message">message</span>'+
-						'</div>';
-						
-	               		//se agrega el formulario de adicion/edicion de instancias
+						//se agrega el formulario de adicion/edicion de instancias
 	               		$('#datasetList > .panel-primary > .panel-collapse > .panel-body').html(newForm);
 	               		
 	               		$('.btnTest').on('click',function(){
@@ -273,14 +276,16 @@
 			               			//$('#pnlInfo').append("<img src='images/loading2.gif'/>");
 			               	    },
 			               	    success: function(data){
-			               	    	alert(data);
-			               	   		//se borra la instancia de la tabla
-			               	    	table.row('.selected').remove().draw( false );
+			               	    	$('#message').text(data);
+			               	    	$('#msgEditDataset').removeClass( "alert-danger hidden" ).addClass( "alert-success" );
+						        	table.row('.selected').remove().draw( false );
 			               	    	$('#datasetList > .panel-primary > .panel-collapse > .panel-body > form').trigger("reset");
-				                },
+				                	$('#stateData').val('1');
+			               	    },
 			               	    error: function(data){
-			               	    	alert(data.responseText);
-			               	    }
+			               	    	$('#message').text(data.ResponseText);
+			               	    	$('#msgEditDataset').removeClass( "alert-success hidden" ).addClass( "alert-danger" );
+						   	    }
 	               	     	});
 	                	});
 	               		
@@ -314,14 +319,15 @@
 			               			//$('#pnlInfo').append("<img src='images/loading2.gif'/>");
 			               	    },
 			               	    success: function(data){
-			               	    	alert(data);
-			               	   		//agregando fila a la tabla
-			               	 		table.row.add(newInstance).draw();
-			               	 	
-			               	    },
+			               	    	$('#message').text(data);
+			               	    	$('#msgEditDataset').removeClass( "alert-danger hidden" ).addClass( "alert-success" );
+						        	table.row.add(newInstance).draw();
+						        	$('#stateData').val('1');
+				               	},
 			               	    error: function(data){
-			               	    	alert(data.responseText);
-			               	    }
+			               	 		$('#message').text(data.ResponseText);
+		               	    		$('#msgEditDataset').removeClass( "alert-success hidden" ).addClass( "alert-danger" );
+					   	    	}
 	               	     	});
 	               			
 	               	    });
@@ -351,13 +357,15 @@
 			               			//$('#pnlInfo').append("<img src='images/loading2.gif'/>");
 			               	    },
 			               	    success: function(data){
-			               	    	alert(data);
-			               	   		//se borra la instancia de la tabla
-			               	    	table.row('.selected').data(updateInstance).draw( false );
-			               	   	},
+			               	    	$('#message').text(data);
+			               	    	$('#msgEditDataset').removeClass( "alert-danger hidden" ).addClass( "alert-success" );
+						        	table.row('.selected').data(updateInstance).draw( false );
+						        	$('#stateData').val('1');
+				               	},
 			               	    error: function(data){
-			               	    	alert(data.responseText);
-			               	    }
+			               	 		$('#message').text(data.ResponseText);
+		               	    		$('#msgEditDataset').removeClass( "alert-success hidden" ).addClass( "alert-danger" );
+					   	    	}
 	               	     	});
 	               	    })
 	               		
@@ -398,7 +406,7 @@
 
   </head>
 
-  <body>
+  <body onBeforeUnload="return test()">
 
 	<jsp:useBean id="usuario" class="com.wekaweb.beans.UsuarioBean" scope="session" />
     <!-- Fixed navbar -->
@@ -448,10 +456,10 @@
 	<div class="container">
 	
 		<div class="page-header">
-  			<h1>Editar datasets</h1>
+  			<h1 class="hidden-print">Editar datasets</h1>
 		</div>
 	  	
-	  	<ol class="breadcrumb">
+	  	<ol class="breadcrumb hidden-print">
 			<li><a href="<%=request.getContextPath()%>/Main?action=index">Home</a></li>
 			<li><a href="#">Preparar Datos</a></li>
 			<li class="active"><a href="<%=request.getContextPath()%>/Main?action=editar">Editar dataset</a></li>
@@ -459,11 +467,11 @@
 	  	
 	  	<input id="context" type="hidden" value="<%=request.getContextPath()%>">
 	  	
-	  	<h3>Tus datasets:</h3>
+	  	<h3 class="hidden-print">Tus datasets:</h3>
         		
         		
     	<div class="row">
-    		<div class="col-md-4">
+    		<div class="col-md-4 hidden-print">
         		<div class="panel-group" id="datasetList">
 					<c:choose>
 					      <c:when test="${empty datasetsu}">
@@ -517,7 +525,7 @@
 				  	</div>
 			    </div>
 			  
-			  	<div class="panel panel-primary">
+			  	<div class="panel panel-primary hidden-print">
 					<div class="panel-heading">
 				    	<h3 class="panel-title">Instancias:</h3>
 				  	</div>
@@ -526,6 +534,19 @@
 						     <div id="pnlInstances" class="table-responsive">
                                 <table class="table table-striped table-condensed table-hover" id="dataInstances"></table>
                             </div><!-- /.table-responsive -->
+                    </div><!-- /.panel-body -->
+             	</div>
+             	
+             	<input type="hidden" id="stateData" value="0">
+             	
+             	<div class="panel panel-primary visible-print-block">
+					<div class="panel-heading">
+				    	<h3 class="panel-title">Instancias:</h3>
+				  	</div>
+				  
+					<div class="panel-body">
+						     <div id="pnlInstancesPrint" class="table-responsive">
+                             </div><!-- /.table-responsive -->
                     </div><!-- /.panel-body -->
              	</div>
 				  

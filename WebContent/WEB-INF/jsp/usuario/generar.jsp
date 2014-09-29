@@ -300,8 +300,9 @@
 	  	<input id="context" type="hidden" value="<%=request.getContextPath()%>">
 	  	
     	<div class="row">
+        	<h3>Seleccionar algoritmo:</h3>
+        		
         	<div class="col-md-4 hidden-print">
-        		<h3>Seleccionar algoritmo:</h3>
         		<div class="alert alert-dismissible alert-danger" role="alert" id="msgAlgoritmo">
 					<button id="btnClose" type="button" class="close" onclick="$('.alert').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="message">message</span>
 				</div>

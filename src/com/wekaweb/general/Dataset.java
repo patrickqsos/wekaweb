@@ -679,8 +679,12 @@ public class Dataset extends HttpServlet {
 						
 						//revisar el tipo de atributo antes de agregar al vector double
 						for(int l=0;l<instanceToAdd.length ;l++){
-							if(dataToUpdate.attribute(l).isNumeric())
-								newInstance[l] =  Double.parseDouble(instanceToAdd[l]);
+							if(dataToUpdate.attribute(l).isNumeric()){
+								if(instanceToAdd[l].isEmpty())
+									newInstance[l] = 0;
+								else
+									newInstance[l] =  Double.parseDouble(instanceToAdd[l]);
+							}
 							if(dataToUpdate.attribute(l).isNominal())
 								newInstance[l] =  dataToUpdate.attribute(l).indexOfValue(instanceToAdd[l]);
 							if(dataToUpdate.attribute(l).isString())
