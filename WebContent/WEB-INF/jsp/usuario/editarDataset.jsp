@@ -85,6 +85,8 @@
     	            	},
     	            	success: function(data){
     	            		alert(data);
+    	            		$('#stateData').val('0');
+			               	
     	            	},
     	            	error: function(data){
     	            		alert(data.responseText);
@@ -94,11 +96,15 @@
     	    }
     	);
     
-    function test(){
-    	alert("leaving");
-    };
+   
 	 
-    window.onbeforeunload = test;
+    window.onbeforeunload = confirmExit;
+    function confirmExit()
+    {
+    	if($('#stateData').val() != 0)	
+      		return "Parece que realizo cambios en el dataset y no presiono el boton \"Guardar\", sus cambios se perderan.  Esta seguro que quiere dejar la pagina?";
+    	
+    }
     
     $(document).ready(function() {
 			
@@ -406,7 +412,7 @@
 
   </head>
 
-  <body onBeforeUnload="return test()">
+  <body>
 
 	<jsp:useBean id="usuario" class="com.wekaweb.beans.UsuarioBean" scope="session" />
     <!-- Fixed navbar -->

@@ -156,7 +156,16 @@ public class Main extends HttpServlet {
     			dispatcher.forward(request,response);
 				break;
 			
-			case "Clustering":
+			case "clustering":
+				if(loadDatasets(request,response)){
+					  dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/clustering.jsp"); 
+					  dispatcher.forward(request,response);
+				}
+				else
+					response.sendRedirect(request.getContextPath()+"/Login");
+				break;	
+				
+				/*
 				ConnectDB connClust = new ConnectDB ();
 				ResultSet rsConsultaClust = null;
 				ArrayList<Map<String, String>> datasetsCluster = new ArrayList<Map<String, String>>();
@@ -176,9 +185,10 @@ public class Main extends HttpServlet {
                 	connClust.closeConnection();	
                 }
                 request.setAttribute("datasetsu", datasetsCluster);
-				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/usuarioClustering.jsp"); 
+				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/clustering.jsp"); 
     			dispatcher.forward(request,response);
 				break;
+				*/
 
 			case "Asociacion":
 				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/usuarioCarga.jsp"); 

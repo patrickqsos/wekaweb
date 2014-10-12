@@ -1,5 +1,8 @@
 package com.wekaweb.general;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.MethodDescriptor;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -7,8 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.JOptionPane;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -32,17 +33,35 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import sun.security.jca.GetInstance.Instance;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.functions.GaussianProcesses;
+import weka.core.Capabilities;
+import weka.core.CapabilitiesHandler;
 import weka.core.DenseInstance;
 import weka.core.Instances;
-import weka.core.OptionHandler;
+import weka.core.MultiInstanceCapabilitiesHandler;
 import weka.core.Utils;
-import weka.core.converters.*;
+import weka.core.converters.ArffSaver;
+import weka.core.converters.C45Loader;
+import weka.core.converters.C45Saver;
+import weka.core.converters.CSVLoader;
+import weka.core.converters.CSVSaver;
 import weka.core.converters.ConverterUtils.DataSource;
+import weka.core.converters.DatabaseLoader;
+import weka.core.converters.DatabaseSaver;
+import weka.core.converters.JSONLoader;
+import weka.core.converters.JSONSaver;
+import weka.core.converters.LibSVMLoader;
+import weka.core.converters.LibSVMSaver;
+import weka.core.converters.MatlabLoader;
+import weka.core.converters.SVMLightLoader;
+import weka.core.converters.SVMLightSaver;
+import weka.core.converters.SerializedInstancesLoader;
+import weka.core.converters.SerializedInstancesSaver;
+import weka.core.converters.XRFFLoader;
+import weka.core.converters.XRFFSaver;
 import weka.core.json.JSONInstances;
 import weka.core.json.JSONNode;
-import weka.datagenerators.DataGenerator;
 import weka.datagenerators.classifiers.classification.Agrawal;
 import weka.datagenerators.classifiers.classification.LED24;
 import weka.datagenerators.classifiers.classification.RDG1;
@@ -51,8 +70,7 @@ import weka.datagenerators.classifiers.regression.Expression;
 import weka.datagenerators.classifiers.regression.MexicanHat;
 import weka.datagenerators.clusterers.BIRCHCluster;
 import weka.datagenerators.clusterers.SubspaceCluster;
-import weka.gui.Logger;
-import weka.gui.SysErrLog;
+import weka.gui.PropertySheetPanel;
 import weka.gui.explorer.DataGeneratorPanel;
 
 import com.wekaweb.beans.DatabaseBean;
@@ -60,7 +78,6 @@ import com.wekaweb.beans.UsuarioBean;
 import com.wekaweb.beans.UsuarioTablaBean;
 import com.wekaweb.helpers.ConnectDB;
 import com.wekaweb.helpers.VcapHelper;
-import com.wekaweb.testing.MyDBSaver;
 
 /**
  * Servlet implementation class Dataset
@@ -177,7 +194,7 @@ public class Dataset extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		PrintWriter printer = response.getWriter();
+//		PrintWriter printer = response.getWriter();
 		if (ServletFileUpload.isMultipartContent(request)) {
     		PrintWriter out = response.getWriter();
     		ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
@@ -313,7 +330,72 @@ public class Dataset extends HttpServlet {
 			DatabaseBean credentials = null;
 			
 			switch (action) {
-			
+				case "getCapabilities":
+					String datasetCap = request.getParameter("dataset");
+					ConnectDB conCap = new ConnectDB ();
+					ResultSet rsCap = null;
+					
+					PrintWriter outCap = response.getWriter();
+					
+					try {
+						dbl = new DatabaseLoader();
+						credentials = VcapHelper.parseVcap();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					//recupera las instancias del dataset 
+					dbl.setUser(credentials.getUsername());
+					dbl.setPassword(credentials.getPassword());
+					dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
+	                dbl.setQuery("select * from "+datasetCap);
+					dbl.connectToDatabase();
+					Instances dataCap = dbl.getDataSet();
+					  
+					//recupera info del dataset
+					String cadenaCap = "select * from usuario_tabla where id_usuario='"+usuario.getId()+"' and tabla='"+datasetCap+"'";
+					rsCap = conCap.getData(cadenaCap);
+	                try {
+						while (rsCap.next()){
+							dataCap.setRelationName(rsCap.getString("relation"));
+							dataCap.setClassIndex(rsCap.getInt("classindex"));
+							nombreTabla = rsCap.getString("tabla");
+							//resultInfo.put("descripcion",rsInfo.getString("descripcion"));
+							//resultInfo.put("origen",rsInfo.getString("origen"));
+				    	}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
+					try {
+						
+						//EM alg = new EM();
+						GaussianProcesses alg = new GaussianProcesses();
+						alg.getCapabilities();
+						Capabilities cap = Capabilities.forInstances(dataCap);
+						
+						/*
+						if(alg.getCapabilities().supports(cap)){
+							response.getWriter().println("soporta");
+						}
+						else
+							response.getWriter().println("no sporta");
+						*/
+						
+						String algName = "SimpleKMeans";
+				        Object algo = Class.forName(algName).newInstance();
+				        
+				        String toolTip = getGlobalInfo(algo, true);
+				          
+				            
+						
+					} catch (Exception e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					
+					
+					
+	                break;
 				case "getInfoDataset":
 					PrintWriter outInfo = response.getWriter();
 					JSONObject resultInfo = new JSONObject();
@@ -668,11 +750,14 @@ public class Dataset extends HttpServlet {
 					break;
 				
 				case "instance":
+					PrintWriter printer = response.getWriter();
+					
 					Instances dataToUpdate = (Instances) session.getAttribute("dataEdit");
 					int index;
 					String type = request.getParameter("type");
 					switch (type) {
 					case "add":
+						
 						String [] instanceToAdd = request.getParameterValues("newInstance[]");
 							
 						double[] newInstance = new double[dataToUpdate.numAttributes()];
@@ -902,5 +987,93 @@ public class Dataset extends HttpServlet {
         	out.flush();
         	con.closeConnection();	
         }
+	}
+	
+	protected String getGlobalInfo(Object object, boolean addCapabilities){
+		// set tool tip text from global info if supplied
+	    String gi = null;
+	    StringBuilder result = new StringBuilder();
+	    try {
+	      BeanInfo bi = Introspector.getBeanInfo(object.getClass());
+	      MethodDescriptor[] methods = bi.getMethodDescriptors();
+	      for (MethodDescriptor method : methods) {
+	        String name = method.getDisplayName();
+	        Method meth = method.getMethod();
+	        if (name.equals("globalInfo")) {
+	          if (meth.getReturnType().equals(String.class)) {
+	            Object args[] = {};
+	            String globalInfo = (String) (meth.invoke(object, args));
+	            gi = globalInfo;
+	            break;
+	          }
+	        }
+	      }
+	    } catch (Exception ex) {
+
+	    }
+
+	    // Max. number of characters per line (may overflow)
+	    int lineWidth = 180;
+
+	    result.append("<html>");
+
+	    if (gi != null && gi.length() > 0) {
+
+	      StringBuilder firstLine = new StringBuilder();
+	      firstLine.append("<font color=blue>");
+	      boolean addFirstBreaks = true;
+	      int indexOfDot = gi.indexOf(".");
+	      if (indexOfDot > 0) {
+	        firstLine.append(gi.substring(0, gi.indexOf(".")));
+	        if (gi.length() - indexOfDot < 3) {
+	          addFirstBreaks = false;
+	        }
+	        gi = gi.substring(indexOfDot + 1, gi.length());
+	      } else {
+	        firstLine.append(gi);
+	        gi = "";
+	      }
+	      firstLine.append("</font>");
+	      if ((addFirstBreaks) && !(gi.startsWith("\n\n"))) {
+	        if (!gi.startsWith("\n")) {
+	          firstLine.append("<br>");
+	        }
+	        firstLine.append("<br>");
+	      }
+	      result.append(Utils.lineWrap(firstLine.toString(), lineWidth));
+
+	      result.append(Utils.lineWrap(gi, lineWidth).replace("\n", "<br>"));
+	      result.append("<br>");
+	    }
+
+	    if (addCapabilities) {
+	      if (object instanceof CapabilitiesHandler) {
+	        if (!result.toString().endsWith("<br><br>")) {
+	          result.append("<br>");
+	        }
+	        String caps = PropertySheetPanel.addCapabilities(
+	          "<font color=red>CAPABILITIES</font>",
+	          ((CapabilitiesHandler) object).getCapabilities());
+	        caps = Utils.lineWrap(caps, lineWidth).replace("\n", "<br>");
+	        result.append(caps);
+	      }
+
+	      if (object instanceof MultiInstanceCapabilitiesHandler) {
+	        result.append("<br>");
+	        String caps = PropertySheetPanel.addCapabilities(
+	          "<font color=red>MI CAPABILITIES</font>",
+	          ((MultiInstanceCapabilitiesHandler) object)
+	            .getMultiInstanceCapabilities());
+	        caps = Utils.lineWrap(caps, lineWidth).replace("\n", "<br>");
+	        result.append(caps);
+	      }
+	    }
+
+	    result.append("</html>");
+
+	    if (result.toString().equals("<html></html>")) {
+	      return null;
+	    }
+	    return result.toString();
 	}
 }
