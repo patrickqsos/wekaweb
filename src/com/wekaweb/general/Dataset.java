@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -29,12 +30,17 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.functions.GaussianProcesses;
+import weka.clusterers.ClusterEvaluation;
+import weka.clusterers.Clusterer;
+import weka.clusterers.Cobweb;
+import weka.clusterers.EM;
+import weka.clusterers.SimpleKMeans;
 import weka.core.Capabilities;
 import weka.core.CapabilitiesHandler;
 import weka.core.DenseInstance;
@@ -332,6 +338,9 @@ public class Dataset extends HttpServlet {
 			switch (action) {
 				case "getCapabilities":
 					String datasetCap = request.getParameter("dataset");
+					String [] algoritmos = request.getParameterValues("algoritmos[]");
+					String tree = request.getParameter("tree");
+					
 					ConnectDB conCap = new ConnectDB ();
 					ResultSet rsCap = null;
 					
@@ -366,34 +375,90 @@ public class Dataset extends HttpServlet {
 						e1.printStackTrace();
 					}
 					
+	                JSONParser parser = new JSONParser();
 					try {
-						
-						//EM alg = new EM();
-						GaussianProcesses alg = new GaussianProcesses();
-						alg.getCapabilities();
-						Capabilities cap = Capabilities.forInstances(dataCap);
-						
-						/*
-						if(alg.getCapabilities().supports(cap)){
-							response.getWriter().println("soporta");
+						JSONArray treeData = (JSONArray) parser.parse(tree);
+						Iterator itData = treeData.iterator();
+						while(itData.hasNext()){
+							JSONObject categoria = (JSONObject) itData.next();
+							JSONArray nodes = (JSONArray) categoria.get("nodes");
+							Iterator itNodes = nodes.iterator();
+							while(itNodes.hasNext()){
+								JSONObject algoritmo = (JSONObject) itNodes.next();
+								System.out.println(algoritmo.get("className"));
+								
+								try {
+									Object fullAlgoritmo = Class.forName((String) algoritmo.get("className")).newInstance();
+									BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+								      MethodDescriptor[] methods = bi.getMethodDescriptors();
+								      for (MethodDescriptor method : methods) {
+								        String name = method.getDisplayName();
+								        Method meth = method.getMethod();
+								        if (name.equals("getCapabilities")) {
+								          if (meth.getReturnType().equals(Capabilities.class)) {
+								            Object args[] = {};
+								            Capabilities cap = Capabilities.forInstances(dataCap);
+											Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+											//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
+											
+											if(capab.supports(cap)){
+												//response.getWriter().println(" - soporta");
+											}
+											else{
+												algoritmo.put("disabled", true);
+												algoritmo.put("selectable", false);
+												//response.getWriter().println(" - no soporta");
+											}
+											break;
+								          }
+								        }
+								      }
+								} catch (Exception e2) {
+									e2.printStackTrace();
+								}
+								
+							}
 						}
-						else
-							response.getWriter().println("no sporta");
-						*/
+						 
+						response.setContentType("application/json");
+						response.getWriter().println(treeData);
 						
-						String algName = "SimpleKMeans";
-				        Object algo = Class.forName(algName).newInstance();
-				        
-				        String toolTip = getGlobalInfo(algo, true);
-				          
-				            
-						
-					} catch (Exception e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+					} catch (ParseException e3) {
+						e3.printStackTrace();
 					}
 					
-					
+					/*
+	                for(int i=0;i<algoritmos.length;i++){
+						
+						try {
+							Object fullAlgoritmo = Class.forName(algoritmos[i]).newInstance();
+							BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+						      MethodDescriptor[] methods = bi.getMethodDescriptors();
+						      for (MethodDescriptor method : methods) {
+						        String name = method.getDisplayName();
+						        Method meth = method.getMethod();
+						        if (name.equals("getCapabilities")) {
+						          if (meth.getReturnType().equals(Capabilities.class)) {
+						            Object args[] = {};
+						            Capabilities cap = Capabilities.forInstances(dataCap);
+									Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+									if(capab.supports(cap)){
+										response.getWriter().println("soporta");
+									}
+									else
+										response.getWriter().println("no sporta");
+									//gi = globalInfo;
+						            break;
+						          }
+						        }
+						      }
+						} catch (Exception e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
+					}
+					*/
+	                
 					
 	                break;
 				case "getInfoDataset":
@@ -628,7 +693,21 @@ public class Dataset extends HttpServlet {
 	        	        file.delete();
 	                
 					break;
+				case "getFullInfoAlgoritmo":
+					String full = request.getParameter("algoritmo");
+					Object fullAlgoritmo = null;
+					try {
+						fullAlgoritmo = Class.forName(full).newInstance();
+					} catch (InstantiationException | IllegalAccessException
+							| ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			        
+			        String fullInfo = getGlobalInfoTest(fullAlgoritmo, true);
+			    	response.getWriter().println(fullInfo);
 					
+					break;
 				case "getInfoAlgoritmo":
 					
 					UsuarioBean user = (UsuarioBean) session.getAttribute("usuario");
@@ -812,59 +891,75 @@ public class Dataset extends HttpServlet {
 					printer.flush();
 					break;
 				case "clustering":
-					/*
-					String dataset = request.getParameter("dataset");
-					String algoritmo = request.getParameter("algoritmo");
+					
+					String datasetCluster = request.getParameter("dataset");
+					String algoritmoCluster = request.getParameter("algoritmo");
 	
-					DatabaseLoader dbl = null;
 					try {
 						dbl = new DatabaseLoader();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					  DatabaseBean credentials = null;
-					try {
 						credentials = VcapHelper.parseVcap();
-					} catch (ParseException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 		              
 					  dbl.setUser(credentials.getUsername());
 					  dbl.setPassword(credentials.getPassword());
 					  dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
-		              dbl.setQuery("select * from "+dataset);
+		              dbl.setQuery("select * from "+datasetCluster);
 					  dbl.connectToDatabase();
-					  Instances data = dbl.getDataSet();
+					  Instances dataForCluster = dbl.getDataSet();
 					  
 					  ClusterEvaluation eval = new ClusterEvaluation();
-						
+					
 					  try {
-						  switch (algoritmo) {
+							Object fullAlgoritmoCluster = Class.forName(algoritmoCluster).newInstance();
+							BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmoCluster.getClass());
+						      MethodDescriptor[] methods = bi.getMethodDescriptors();
+						      for (MethodDescriptor method : methods) {
+						        String name = method.getDisplayName();
+						        Method meth = method.getMethod();
+						        if (name.equals("buildClusterer")) {
+						        	
+						        	meth.invoke(fullAlgoritmoCluster, dataForCluster);
+						        	eval.setClusterer((Clusterer) fullAlgoritmoCluster);
+									eval.evaluateClusterer(dataForCluster);
+									response.getWriter().println(eval.clusterResultsToString());
+									
+						           
+						        }
+						      }
+						} catch (Exception e2) {
+							e2.printStackTrace();
+						}
+					  
+					  /*
+					  try {
+						  switch (algoritmoCluster) {
 							case "3":	EM em = new EM();
 							
-										em.buildClusterer(data); 
+										em.buildClusterer(dataForCluster); 
 										eval.setClusterer(em);
-										eval.evaluateClusterer(data);
-										out.println(eval.clusterResultsToString());
+										eval.evaluateClusterer(dataForCluster);
+										response.getWriter().println(eval.clusterResultsToString());
 								 		break;
 							case "2":	Cobweb cobweb = new Cobweb();
-										cobweb.buildClusterer(data);
+										cobweb.buildClusterer(dataForCluster);
 										eval.setClusterer(cobweb);
-										eval.evaluateClusterer(data);
-										out.println(eval.clusterResultsToString());
+										eval.evaluateClusterer(dataForCluster);
+										response.getWriter().println(eval.clusterResultsToString());
 										break;
 							case "1":	SimpleKMeans kmeans = new SimpleKMeans();
-										kmeans.buildClusterer(data);
+										kmeans.buildClusterer(dataForCluster);
 										eval.setClusterer(kmeans);
-										eval.evaluateClusterer(data);
-										out.println(eval.clusterResultsToString());
+										eval.evaluateClusterer(dataForCluster);
+										response.getWriter().println(eval.clusterResultsToString());
 										break;
 										
-							case "4":	SimpleKMeans fc = new SimpleKMeans();
-										fc.buildClusterer(data);
+							case "weka.clusterers.SimpleKMeans":	SimpleKMeans fc = new SimpleKMeans();
+										fc.buildClusterer(dataForCluster);
 										eval.setClusterer(fc);
-										eval.evaluateClusterer(data);
-										out.println(eval.clusterResultsToString());
+										eval.evaluateClusterer(dataForCluster);
+										response.getWriter().println(eval.clusterResultsToString());
 										break;
 	
 							default:
@@ -872,12 +967,14 @@ public class Dataset extends HttpServlet {
 							}
 					  } catch (Exception e) {
 					  }
+					  
 					  */
 					break;
 	
 				default:
 					break;
 				}
+			
 		}
 	}
 	
@@ -989,7 +1086,7 @@ public class Dataset extends HttpServlet {
         }
 	}
 	
-	protected String getGlobalInfo(Object object, boolean addCapabilities){
+	protected String getGlobalInfoTest(Object object, boolean addCapabilities){
 		// set tool tip text from global info if supplied
 	    String gi = null;
 	    StringBuilder result = new StringBuilder();

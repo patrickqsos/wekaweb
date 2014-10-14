@@ -63,7 +63,8 @@
 		showTags: false,
 
 		// Event handler for when a node is selected
-		onNodeSelected: undefined
+		onNodeSelected: undefined,
+		
 	};
 
 	Tree.prototype = {
@@ -75,6 +76,19 @@
 			$('#' + this._styleId).remove();
 		},
 
+		getNodes: function(){
+			var self = this;
+			var nodes = new Array();
+			$.each(self.nodes, function addNodes(id, node) {
+				if(node.className != undefined)
+					nodes.push(node.className);
+					console.log(node.className);
+			});
+
+			//return "dasdas";
+			//console.log(self.nodes);
+		},
+		
 		_destroy: function() {
 
 			if (this.initialized) {
@@ -266,10 +280,14 @@
 
 				var treeItem = $(self._template.item)
 					.addClass('node-' + self._elementId)
+					//.addClass('disabled')
 					.addClass((node === self.selectedNode) ? 'node-selected' : '')
 					.attr('data-nodeid', node.nodeId)
 					.attr('style', self._buildStyleOverride(node));
-
+				
+				if(node.disabled)
+					treeItem.addClass('disabled');
+					
 				// Add indent/spacer to mimic tree structure
 				for (var i = 0; i < (level - 1); i++) {
 					treeItem.append(self._template.indent);
@@ -440,12 +458,16 @@
 			else {
 				if (!self) {
 					$.data(this, 'plugin_' + pluginName, new Tree(this, $.extend(true, {}, options)));
+					//console.log($.data(this, 'plugin_' + pluginName));
+					
 				}
 				else {
 					self._init(options);
 				}
+				
 			}
 		});
+		
 	};
 
 })(jQuery, window, document);
