@@ -35,6 +35,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import weka.associations.Associator;
+import weka.associations.AssociatorEvaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
@@ -932,45 +934,39 @@ public class Dataset extends HttpServlet {
 							e2.printStackTrace();
 						}
 					  
-					  /*
-					  try {
-						  switch (algoritmoCluster) {
-							case "3":	EM em = new EM();
-							
-										em.buildClusterer(dataForCluster); 
-										eval.setClusterer(em);
-										eval.evaluateClusterer(dataForCluster);
-										response.getWriter().println(eval.clusterResultsToString());
-								 		break;
-							case "2":	Cobweb cobweb = new Cobweb();
-										cobweb.buildClusterer(dataForCluster);
-										eval.setClusterer(cobweb);
-										eval.evaluateClusterer(dataForCluster);
-										response.getWriter().println(eval.clusterResultsToString());
-										break;
-							case "1":	SimpleKMeans kmeans = new SimpleKMeans();
-										kmeans.buildClusterer(dataForCluster);
-										eval.setClusterer(kmeans);
-										eval.evaluateClusterer(dataForCluster);
-										response.getWriter().println(eval.clusterResultsToString());
-										break;
-										
-							case "weka.clusterers.SimpleKMeans":	SimpleKMeans fc = new SimpleKMeans();
-										fc.buildClusterer(dataForCluster);
-										eval.setClusterer(fc);
-										eval.evaluateClusterer(dataForCluster);
-										response.getWriter().println(eval.clusterResultsToString());
-										break;
-	
-							default:
-								break;
-							}
-					  } catch (Exception e) {
-					  }
-					  
-					  */
 					break;
 	
+				case "asociacion":
+					String datasetAsoc = request.getParameter("dataset");
+					String algoritmoAsoc = request.getParameter("algoritmo");
+	
+					try {
+						dbl = new DatabaseLoader();
+						credentials = VcapHelper.parseVcap();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+		              
+					  dbl.setUser(credentials.getUsername());
+					  dbl.setPassword(credentials.getPassword());
+					  dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
+		              dbl.setQuery("select * from "+datasetAsoc);
+					  dbl.connectToDatabase();
+					  Instances dataForAsoc = dbl.getDataSet();
+					  
+					  AssociatorEvaluation evalAsoc = new AssociatorEvaluation();
+				      
+					  try {
+							Object fullAlgoritmoAsoc = Class.forName(algoritmoAsoc).newInstance();
+							evalAsoc.evaluate((Associator) fullAlgoritmoAsoc,dataForAsoc);
+							response.getWriter().println(evalAsoc.toSummaryString());
+						} catch (Exception e2) {
+							System.out.println(e2.getClass());
+							response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				        	response.getWriter().println(e2.getMessage());
+							e2.printStackTrace();
+						}
+					break;
 				default:
 					break;
 				}

@@ -7,6 +7,10 @@ import java.io.FileReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import weka.associations.Apriori;
+import weka.associations.AssociatorEvaluation;
+import weka.clusterers.ClusterEvaluation;
+import weka.clusterers.EM;
 import weka.core.Instances;
 import weka.core.converters.JSONSaver;
 import weka.core.json.JSONInstances;
@@ -33,13 +37,13 @@ public class Arff2Database {
    */
   public static void main(String[] args) throws Exception {
     
-	  /*
 	  
-	  BufferedReader br = new BufferedReader(new FileReader("C:\\weather.arff"));
-	  File file = new File("E:\\Environment\\weather.json");
+	  
+	  BufferedReader br = new BufferedReader(new FileReader("/Users/Patrick/weather.arff"));
+	  //File file = new File("E:\\Environment\\weather.json");
 	  
       Instances data = new Instances(br);
-	  */
+	  
 	  /*
 		data.setClassIndex(data.numAttributes() - 1);
 	
@@ -75,9 +79,11 @@ public class Arff2Database {
       
       System.out.println("JSON : " + a.toString());
       */
+      Apriori alg = new Apriori();
+      AssociatorEvaluation eval = new AssociatorEvaluation();
+      eval.evaluate(alg, data);
       
-      Agrawal ag = new Agrawal();
-      System.out.println(ag.getOptions());
+      System.out.println(eval.toSummaryString());
       
      
   }
