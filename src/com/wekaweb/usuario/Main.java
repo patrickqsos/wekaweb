@@ -155,7 +155,16 @@ public class Main extends HttpServlet {
 				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/usuarioPreparacion.jsp"); 
     			dispatcher.forward(request,response);
 				break;
-			
+				
+			case "clasificacion":
+				if(loadDatasets(request,response)){
+					  dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/clasificacion.jsp"); 
+					  dispatcher.forward(request,response);
+				}
+				else
+					response.sendRedirect(request.getContextPath()+"/Login");
+				break;
+				
 			case "clustering":
 				if(loadDatasets(request,response)){
 					  dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/clustering.jsp"); 

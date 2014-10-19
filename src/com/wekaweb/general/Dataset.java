@@ -44,6 +44,7 @@ import weka.clusterers.Cobweb;
 import weka.clusterers.EM;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Capabilities;
+import weka.core.Capabilities.Capability;
 import weka.core.CapabilitiesHandler;
 import weka.core.DenseInstance;
 import weka.core.Instances;
@@ -346,8 +347,6 @@ public class Dataset extends HttpServlet {
 					ConnectDB conCap = new ConnectDB ();
 					ResultSet rsCap = null;
 					
-					PrintWriter outCap = response.getWriter();
-					
 					try {
 						dbl = new DatabaseLoader();
 						credentials = VcapHelper.parseVcap();
@@ -381,15 +380,73 @@ public class Dataset extends HttpServlet {
 					try {
 						JSONArray treeData = (JSONArray) parser.parse(tree);
 						Iterator itData = treeData.iterator();
+						
+						Capabilities test = Capabilities.forInstances(dataCap);
+						//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
+						Iterator<Capability> my = test.capabilities();
+						while(my.hasNext()){
+							Capability myc = my.next();
+							System.out.println(myc.name());
+						}
+						
 						while(itData.hasNext()){
+							try {
+							
 							JSONObject categoria = (JSONObject) itData.next();
 							JSONArray nodes = (JSONArray) categoria.get("nodes");
 							Iterator itNodes = nodes.iterator();
 							while(itNodes.hasNext()){
 								JSONObject algoritmo = (JSONObject) itNodes.next();
-								System.out.println(algoritmo.get("className"));
 								
-								try {
+								if(algoritmo.containsKey("subCategoria")){
+									JSONArray nodesAlg = (JSONArray) algoritmo.get("nodes");
+									Iterator itNodesAlg = nodesAlg.iterator();
+									while(itNodesAlg.hasNext()){
+										JSONObject algoritmoSub = (JSONObject) itNodesAlg.next();
+										System.out.println("\n\n Evaluating: "+algoritmoSub.get("className")+" --> ");
+										Object fullAlgoritmo = Class.forName((String) algoritmoSub.get("className")).newInstance();
+										BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+									      MethodDescriptor[] methods = bi.getMethodDescriptors();
+									      for (MethodDescriptor method : methods) {
+									        String name = method.getDisplayName();
+									        Method meth = method.getMethod();
+									        if (name.equals("getCapabilities")) {
+									          if (meth.getReturnType().equals(Capabilities.class)) {
+									            Object args[] = {};
+									            Capabilities cap = Capabilities.forInstances(dataCap);
+												Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+												
+												
+												cap.disable(Capability.NO_CLASS);
+												//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
+												Iterator<Capability> myit = capab.capabilities();
+												while(myit.hasNext()){
+													Capability mycap = myit.next();
+													System.out.println(mycap.name());
+												}
+												
+												
+												
+												if(capab.supports(cap)){
+													//response.getWriter().println(" - soporta");
+													//System.out.println("soporta");
+												}
+												else{
+													//System.out.println("no soporta");
+													algoritmoSub.put("disabled", true);
+													algoritmoSub.put("selectable", false);
+													//response.getWriter().println(" - no soporta");
+												}
+												break;
+									          }
+									        }
+									      }
+									}
+								}
+								else{
+									System.out.println("evaluating: "+algoritmo.get("className"));
+									System.out.println("sin subcategories");
+									
 									Object fullAlgoritmo = Class.forName((String) algoritmo.get("className")).newInstance();
 									BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
 								      MethodDescriptor[] methods = bi.getMethodDescriptors();
@@ -415,17 +472,18 @@ public class Dataset extends HttpServlet {
 								          }
 								        }
 								      }
-								} catch (Exception e2) {
-									e2.printStackTrace();
 								}
+							}
 								
+							} catch (Exception e2) {
+								e2.printStackTrace();
 							}
 						}
 						 
 						response.setContentType("application/json");
 						response.getWriter().println(treeData);
 						
-					} catch (ParseException e3) {
+					} catch (Exception e3) {
 						e3.printStackTrace();
 					}
 					

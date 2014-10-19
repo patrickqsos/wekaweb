@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Clustering de datos</title>
+    <title>Clasificacion de datos</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -44,46 +44,274 @@
        
     <script type="text/javascript">
    	 function getTree() {
-    	var tree = [
+   		var tree = [
     	            {
-    	            text: "Clusterers", 
+    	            text: "Classifiers", 
     	            selectable: false,
     	            nodes: [
     	            	{
-    	            		text: "Canopy",
-    	            		className: "weka.clusterers.Canopy",
-    	            	    
-    	            	},
-    	            	{
-    	            		text: "Cobweb",
-    	            		className: "weka.clusterers.Cobweb",
-    	            	},
-    	            	{
-    	            		text: "EM",
-    	            		className: "weka.clusterers.EM",
-    	            	},
-    	            	{
-    	            		text: "FarthestFirst",
-    	            		className: "weka.clusterers.FarthestFirst",
-    	            	},
-    	            	{
-    	            		text: "FilteredClusterer",
-    	            		className: "weka.clusterers.FilteredClusterer"
-    	            	},
-    	            	{
-    	            		text: "HierarchicalClusterer",
-    	            		className: "weka.clusterers.HierarchicalClusterer"
-    	            	},
-    	            	{
-    	            		text: "MakeDensityBasedClusterer",
-    	            		className: "weka.clusterers.MakeDensityBasedClusterer"
-    	            	},
-    	            	{
-    	            		text: "SimpleKMeans",
-    	            		className: "weka.clusterers.SimpleKMeans"
-    	            	}
-    	            ]
-    	            
+    	            	  subCategoria: "true",	
+    	               	  text: "Bayes",
+    	               	  selectable: false,
+      	                  nodes: [
+    	                    {
+    	                      text: "BayesNet",
+    	                      className: "weka.classifiers.bayes.BayesNet",
+    	                    	//className: "weka.clusterers.Cobweb",
+    	                    },
+    	  				    {
+      	                      text: "NaiveBayes",
+      	                      className: "weka.classifiers.bayes.NaiveBayes",
+      	                    },
+      	  					{
+      	                      text: "NaiveBayesMultinomial",
+      	                      className: "weka.classifiers.bayes.NaiveBayesMultinomial",
+      	                    },
+      	  					{
+      	                      text: "NaiveBayesMultinomialText",
+      	                      className: "weka.classifiers.bayes.NaiveBayesMultinomialText",
+      	                    },
+      	  					{
+      	                      text: "NaiveBayesMultinomialUpdateable",
+      	                      className: "weka.classifiers.bayes.NaiveBayesMultinomialUpdateable",
+      	                    },
+      	  					{
+      	                      text: "NaiveBayesUpdateable",
+      	                      className: "weka.classifiers.bayes.NaiveBayesUpdateable",
+      	                    },
+    	                  ]
+    	                },
+    	                {
+    	                	subCategoria: "true",	
+      	               	  	text: "Functions",
+    	                	selectable: false,
+    	      	            nodes: [
+        	      	        	{
+        	      	            	text: "GaussianProcesses",
+        	      	                className: "weka.classifiers.functions.GaussianProcesses",
+        	      	            },
+        	      	          	{
+        	      	            	text: "LinearRegression",
+        	      	                className: "weka.classifiers.functions.LinearRegression",
+        	      	            },
+        	      	          	{
+        	      	            	text: "Logistic",
+        	      	                className: "weka.classifiers.functions.Logistic",
+        	      	            },
+        	      	          	{
+        	      	            	text: "MultilayerPerceptron",
+        	      	                className: "weka.classifiers.functions.MultilayerPerceptron",
+        	      	            },
+        	      	          	{
+        	      	            	text: "SGD",
+        	      	                className: "weka.classifiers.functions.SGD",
+        	      	            },
+        	      	          	{
+        	      	            	text: "SGDText",
+        	      	                className: "weka.classifiers.functions.SGDText",
+        	      	            },
+        	      	          	{
+        	      	            	text: "SimpleLinearRegression",
+        	      	                className: "weka.classifiers.functions.SimpleLinearRegression",
+        	      	            },
+        	      	          	{
+        	      	            	text: "SimpleLogistic",
+        	      	                className: "weka.classifiers.functions.SimpleLogistic",
+        	      	            },
+        	      	          	{
+        	      	            	text: "SMO",
+        	      	                className: "weka.classifiers.functions.SMO",
+        	      	            },
+        	      	          	{
+        	      	            	text: "SMOreg",
+        	      	                className: "weka.classifiers.functions.SMOreg",
+        	      	            },
+        	      	          	{
+        	      	            	text: "VotedPerceptron",
+        	      	                className: "weka.classifiers.functions.VotedPerceptron",
+        	      	            },
+        	      	        ]
+    	      	        },
+    	      	      	{
+    	      	       	  subCategoria: "true",	
+      	               	  text: "Lazy",
+      	               	  selectable: false,
+        	                  nodes: [
+	      	                    {
+	      	                      text: "IBk",
+	      	                      className: "weka.classifiers.lazy.IBk",
+	      	                    },
+	      	                    {
+		      	                  text: "KStar",
+		      	                  className: "weka.classifiers.lazy.KStar",
+		      	                },
+		      	                {
+			      	              text: "LWL",
+			      	              className: "weka.classifiers.lazy.LWL",
+			      	            },
+      	                  	  ]
+      	                },
+      	              	{
+      	               	  subCategoria: "true",	
+      	               	  text: "Meta",
+      	               	  selectable: false,
+        	                  nodes: [
+	      	                    {
+	      	                    	text: "AdaBoostM1",
+	      	                    	className: "weka.classifiers.meta.AdaBoostM1",
+	      	                    },
+	      	                    {
+	      	                    	text: "AdditiveRegression",
+	      	                    	className: "weka.classifiers.meta.AdditiveRegression",
+	      	                    },
+	      	                  	{
+	      	                    	text: "AttributeSelectedClassifier",
+	      	                    	className: "weka.classifiers.meta.AttributeSelectedClassifier",
+	      	                    },
+	      	                  	{
+	      	                    	text: "Bagging",
+	      	                    	className: "weka.classifiers.meta.Bagging",
+	      	                    },
+	      	                  	{
+	      	                    	text: "ClassificationViaRegression",
+	      	                    	className: "weka.classifiers.meta.ClassificationViaRegression",
+	      	                    },
+	      	                  	{
+	      	                    	text: "CostSensitiveClassifier",
+	      	                    	className: "weka.classifiers.meta.CostSensitiveClassifier",
+	      	                    },
+	      	                  	{
+	      	                    	text: "CVParameterSelection",
+	      	                    	className: "weka.classifiers.meta.CVParameterSelection",
+	      	                    },
+	      	                  	{
+	      	                    	text: "FilteredClassifier",
+	      	                    	className: "weka.classifiers.meta.FilteredClassifier",
+	      	                    },
+	      	                  	{
+	      	                    	text: "LogitBoost",
+	      	                    	className: "weka.classifiers.meta.LogitBoost",
+	      	                    },
+	      	                  	{
+	      	                    	text: "MultiClassClassifier",
+	      	                    	className: "weka.classifiers.meta.MultiClassClassifier",
+	      	                    },
+	      	                  	{
+	      	                    	text: "MultiClassClassifierUpdateable",
+	      	                    	className: "weka.classifiers.meta.MultiClassClassifierUpdateable",
+	      	                    },
+	      	                  	{
+	      	                    	text: "MultiScheme",
+	      	                    	className: "weka.classifiers.meta.MultiScheme",
+	      	                    },
+	      	                  	{
+	      	                    	text: "RandomCommittee",
+	      	                    	className: "weka.classifiers.meta.RandomCommittee",
+	      	                    },
+	      	                  	{
+	      	                    	text: "RandomizableFilteredClassifier",
+	      	                    	className: "weka.classifiers.meta.RandomizableFilteredClassifier",
+	      	                    },
+	      	                  	{
+	      	                    	text: "RandomSubSpace",
+	      	                    	className: "weka.classifiers.meta.RandomSubSpace",
+	      	                    },
+	      	                  	{
+	      	                    	text: "RegressionByDiscretization",
+	      	                    	className: "weka.classifiers.meta.RegressionByDiscretization",
+	      	                    },
+	      	                  	{
+	      	                    	text: "Stacking",
+	      	                    	className: "weka.classifiers.meta.Stacking",
+	      	                    },
+	      	                  	{
+	      	                    	text: "Vote",
+	      	                    	className: "weka.classifiers.meta.Vote",
+	      	                    },
+	      	                  ]
+      	                },
+      	              	{
+      	               	  subCategoria: "true",	
+      	               	  text: "Misc",
+      	               	  selectable: false,
+        	                  nodes: [
+	      	                    {
+	      	                    	text: "InputMappedClassifier",
+	      	                    	className: "weka.classifiers.misc.InputMappedClassifier",
+	      	                    },
+	      	                    {
+		      	                    text: "InputMappedClassifier",
+									className: "weka.classifiers.misc.InputMappedClassifier",
+		      	                },
+	      	                  ]
+      	                },
+      	              	{
+      	               	  subCategoria: "true",	
+      	               	  text: "Rules",
+      	               	  selectable: false,
+        	                  nodes: [
+	      	                  	{
+	      	                    	text: "DecisionTable",
+	      	                    	className: "weka.classifiers.rules.DecisionTable",
+	      	                    },
+	      	                  	{
+	      	                    	text: "JRip",
+	      	                    	className: "weka.classifiers.rules.JRip",
+	      	                    },
+	      	                  	{
+	      	                    	text: "M5Rules",
+	      	                    	className: "weka.classifiers.rules.M5Rules",
+	      	                    },
+	      	                  	{
+	      	                    	text: "OneR",
+	      	                    	className: "weka.classifiers.rules.OneR",
+	      	                    },
+	      	                  	{
+	      	                    	text: "PART",
+	      	                    	className: "weka.classifiers.rules.PART",
+	      	                    },
+	      	                  	{
+	      	                    	text: "ZeroR",
+	      	                    	className: "weka.classifiers.rules.ZeroR",
+	      	                    },
+	      	                  ]
+      	                },
+      	             	{
+      	                  subCategoria: "true",	
+      	               	  text: "Trees",
+      	               	  selectable: false,
+        	                  nodes: [
+	      	                    {
+	      	                    	text: "DecisionStump",
+	      	                    	className: "weka.classifiers.trees.DecisionStump",
+	      	                    },
+	      	                  	{
+	      	                    	text: "HoeffdingTree",
+	      	                    	className: "weka.classifiers.trees.HoeffdingTree",
+	      	                    },
+	      	                  	{
+	      	                    	text: "J48",
+	      	                    	className: "weka.classifiers.trees.J48",
+	      	                    },
+	      	                  	{
+	      	                    	text: "LMT",
+	      	                    	className: "weka.classifiers.trees.LMT",
+	      	                    },
+	      	                  	{
+	      	                    	text: "M5P",
+	      	                    	className: "weka.classifiers.trees.M5P",
+	      	                    },
+	      	                  	{
+	      	                    	text: "RandomForest",
+	      	                    	className: "weka.classifiers.trees.RandomForest",
+	      	                    },
+	      	                  	{
+	      	                    	text: "REPTree",
+	      	                    	className: "weka.classifiers.trees.REPTree",
+	      	                    },
+	      	                  ]
+      	                },
+    	              ]
     	            }
     	          ];
 	    return tree;
@@ -227,7 +455,6 @@
 				$('#message').text("Selecciona un dataset y un algoritmo");
 				$('#msgAlgoritmo').show();
 				$('#btnStart').button('reset');
-				
 			}
 			
 			else{
@@ -237,7 +464,7 @@
 	           		url: 'Dataset',
 	           		//dataType: 'JSON',
 	           		data: {
-	           			action: 'clustering',
+	           			action: 'asociacion',
 	           			dataset: dataset,
 	           			algoritmo: algoritmo,
 	           		//	tree: JSON.stringify(tree),
@@ -257,15 +484,13 @@
 						$('#btnExportar').prop('disabled', false);
 						
 						$('#btnStart').button('reset');
-						
 	           	 	},
 	           		error: function(data){
 	           			$('#msgGenerated').removeClass( "alert-success" ).addClass( "alert-danger" );
 						$('#messageGen').text(data.responseText);
 						$('#msgGenerated').show();
 						$('#btnStart').button('reset');
-						
-			     	}
+					}
 	           	});
 			}
 		});	
@@ -410,13 +635,13 @@
 	<div class="container">
 	
 		<div class="page-header">
-  			<h1>Clustering</h1>
+  			<h1>Clasificacion</h1>
 		</div>
 	  	
 	  	<ol class="breadcrumb hidden-print">
 			<li><a href="<%=request.getContextPath()%>/Main?action=index">Home</a></li>
 			<li>Datasets</li>
-			<li class="active"><a href="<%=request.getContextPath()%>/Main?action=clustering">Clustering</a></li>
+			<li class="active"><a href="<%=request.getContextPath()%>/Main?action=clasificacion">Clasificacion</a></li>
 	  	</ol>
 	  	
 	  	<input id="context" type="hidden" value="<%=request.getContextPath()%>">
