@@ -115,45 +115,13 @@ public class Main extends HttpServlet {
 				break;
 			
 			case "preprocess":
-				ConnectDB connPrep = new ConnectDB ();
-				ResultSet rsConsultaPrep = null;
-				ArrayList<UsuarioTablaBean> datasPrep = new ArrayList<UsuarioTablaBean>();
-				ArrayList<Map<String, String>> datasetsPrep = new ArrayList<Map<String, String>>();
-				try{
-                    String cadena= "select * from usuario_tabla where id_usuario='"+usuario.getId()+"'";
-                    rsConsultaPrep = connPrep.getData(cadena);
-                    while (rsConsultaPrep.next()){
-                    	Map<String, String> dataset = new HashMap<String, String>();
-                    	
-                    	UsuarioTablaBean data = new UsuarioTablaBean();
-                    	//esta parte es la nueva
-                    	data.setIdUsuario(rsConsultaPrep.getString("id_usuario"));
-                    	data.setNombre(rsConsultaPrep.getString("nombre"));
-                    	data.setTabla(rsConsultaPrep.getString("tabla"));
-                    	data.setRelation(rsConsultaPrep.getString("relation"));
-                    	data.setDescripcion(rsConsultaPrep.getString("descripcion"));
-                    	
-                    	//probando
-                    	//System.out.println(data.toString());
-                    	
-                    	dataset.put("id_usuario", rsConsultaPrep.getString("id_usuario"));
-                    	dataset.put("nombre", rsConsultaPrep.getString("nombre"));
-                    	dataset.put("tabla", rsConsultaPrep.getString("tabla"));
-                    	dataset.put("descripcion", rsConsultaPrep.getString("descripcion"));
-                    	datasetsPrep.add(dataset);
-                    	
-                    	datasPrep.add(data);
-                    	//new
-                    	
-                    }
-                }catch(Exception e){
-                	e.printStackTrace();
-                }finally{
-                	connPrep.closeConnection();	
-                }
-                request.setAttribute("datasetsu", datasPrep);
-				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/usuarioPreparacion.jsp"); 
-    			dispatcher.forward(request,response);
+				if(loadDatasets(request,response)){
+					  dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/preprocess.jsp"); 
+					  dispatcher.forward(request,response);
+				}
+				else
+					response.sendRedirect(request.getContextPath()+"/Login");
+				
 				break;
 				
 			case "clasificacion":

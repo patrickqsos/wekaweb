@@ -113,7 +113,8 @@
 		
 		$('#datasetList > .panel').on('show.bs.collapse', function (e) {
 				$(this).removeClass( "panel-default" ).addClass( "panel-primary" );
-	        });
+				$('#treeAlgoritmos').treeview({data: getTree(),levels:2,showTags: true});
+		    });
 			
 		$('#datasetList > .panel').on('hide.bs.collapse', function (e) {
 			$(this).removeClass( "panel-primary" ).addClass( "panel-default" );

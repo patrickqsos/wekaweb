@@ -206,7 +206,29 @@
                		
 	               		
 	               		//se arma el formulario de instancias
-	               		var newForm = '<form role="form">';
+	               		var newForm = '';
+	               		
+	               		newForm += '<label for="classAttr">Atributo clase</label>';
+           				
+	               		newForm += '<select id="classAttr" class="form-control input-sm">';
+	               		if(json.classIndex < 0){
+	               			newForm += '<option value="-1" selected="selected">No class</option>';
+		               	}
+	               		else{
+	               			newForm += '<option value="-1">No class</option>';
+	               		}
+	               		for(var j=0;j<json.dataset.header.attributes.length; j++){
+	               			if(json.classIndex == j){
+	               				newForm += '<option selected="selected" value="'+j+'">'+json.dataset.header.attributes[j].name+'</option>';
+	               			}
+	               			else{
+	               				newForm += '<option value="'+j+'">'+json.dataset.header.attributes[j].name+'</option>';
+		               		}
+	               		}
+	               		newForm += '</select>';	
+           				newForm += '<hr>';
+	               		
+           				newForm += '<form role="form">';
 	               		
 	               		newForm += '<div class="alert alert-dismissible alert-danger hidden" role="alert" id="msgEditDataset">'+
 						'<button id="btnClose" type="button" class="close" onclick="$(\'.alert\').addClass(\'hidden\')"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="message">message</span>'+
@@ -262,6 +284,25 @@
 	               			console.log(test);
 	               		})
 	               		
+	               		$('#classAttr').on('change', function () {
+	               			//alert($(this).val());
+	               			$.ajax({
+			               		type: 'post',
+			               		url: 'Dataset',
+			               		data: {
+			               			action: 'updateClassIndex',
+			               			//dataset: 'delete',
+			               			classIndex: $(this).val()
+			               			//index: index,
+			               		},
+			               		success: function(data){
+			               	    	alert(data);
+			               		},
+			               	    error: function(data){
+			               	    	alert(data.responseText);
+			               	    }
+	               			})
+	               		});
 	               	    //se agrega el evento al boton eliminar 
 	               		$('.btnDelete').on('click', function () {
 	               			//var deleteInstance = table.row('.selected').data();

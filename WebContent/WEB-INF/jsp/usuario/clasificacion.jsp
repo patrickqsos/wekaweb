@@ -464,7 +464,7 @@
 	           		url: 'Dataset',
 	           		//dataType: 'JSON',
 	           		data: {
-	           			action: 'asociacion',
+	           			action: 'clasificacion',
 	           			dataset: dataset,
 	           			algoritmo: algoritmo,
 	           		//	tree: JSON.stringify(tree),
@@ -667,6 +667,15 @@
 				</div>
 				
 				<h3>Seleccionar algoritmo:</h3>
+        		<div class="form-group">
+                
+	        		<div class="input-group">
+	                    <input type="text" class="form-control" placeholder="Search" name="q">
+	                    <div class="input-group-btn">
+	                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+	                    </div>
+	                </div>
+	            </div>
         		<div id="treeAlgoritmos"></div>
         		  
         		<input id="inputDataset" type="hidden">  

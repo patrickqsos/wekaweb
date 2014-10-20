@@ -37,12 +37,11 @@ import org.json.simple.parser.ParseException;
 
 import weka.associations.Associator;
 import weka.associations.AssociatorEvaluation;
+import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
-import weka.clusterers.Cobweb;
-import weka.clusterers.EM;
-import weka.clusterers.SimpleKMeans;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.CapabilitiesHandler;
@@ -416,26 +415,12 @@ public class Dataset extends HttpServlet {
 									            Capabilities cap = Capabilities.forInstances(dataCap);
 												Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
 												
-												
-												cap.disable(Capability.NO_CLASS);
-												//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
-												Iterator<Capability> myit = capab.capabilities();
-												while(myit.hasNext()){
-													Capability mycap = myit.next();
-													System.out.println(mycap.name());
-												}
-												
-												
-												
 												if(capab.supports(cap)){
-													//response.getWriter().println(" - soporta");
-													//System.out.println("soporta");
+												
 												}
 												else{
-													//System.out.println("no soporta");
 													algoritmoSub.put("disabled", true);
 													algoritmoSub.put("selectable", false);
-													//response.getWriter().println(" - no soporta");
 												}
 												break;
 									          }
@@ -444,8 +429,7 @@ public class Dataset extends HttpServlet {
 									}
 								}
 								else{
-									System.out.println("evaluating: "+algoritmo.get("className"));
-									System.out.println("sin subcategories");
+									//System.out.print("evaluating: "+algoritmo.get("className"));
 									
 									Object fullAlgoritmo = Class.forName((String) algoritmo.get("className")).newInstance();
 									BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
@@ -461,12 +445,12 @@ public class Dataset extends HttpServlet {
 											//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
 											
 											if(capab.supports(cap)){
-												//response.getWriter().println(" - soporta");
+												//System.out.println(" soporta");
 											}
 											else{
 												algoritmo.put("disabled", true);
 												algoritmo.put("selectable", false);
-												//response.getWriter().println(" - no soporta");
+												//System.out.println(" no soporta");
 											}
 											break;
 								          }
@@ -565,6 +549,7 @@ public class Dataset extends HttpServlet {
 		        	resultInfo.put("instancias", data.numInstances());
 		        	resultInfo.put("atributos", data.numAttributes());
 		        	resultInfo.put("sum", data.sumOfWeights());
+		        	resultInfo.put("classIndex", data.classIndex());
 					
 		        	if(typeInfo.equals("dataExport"))
 		        		  session.setAttribute("dataExport", data);
@@ -588,7 +573,28 @@ public class Dataset extends HttpServlet {
 					  outInfo.println(resultInfo);
 					  outInfo.flush();
 					break;
-				
+				case "updateClassIndex":
+					
+					String datase = (String) session.getAttribute("nombreTabla");
+					String classIndex = request.getParameter("classIndex");
+					
+					ConnectDB con = new ConnectDB ();
+			        int  rsConsulta = 0;
+			        //conexion a bd
+			        try{
+			        	String cadn= "update  usuario_tabla set classindex='"+classIndex+"' where tabla ='"+datase+"'";
+			        	System.out.println(cadn);
+			        	rsConsulta = con.InsertaDatos(cadn);
+			        	if(rsConsulta != -1){
+			        		response.getWriter().println("updated");
+			        	}
+				    }
+			        catch(Exception e){
+			        }finally{
+			        	con.closeConnection();	
+			        }
+			        
+					break;
 				case "uploadUrl":
 					PrintWriter outUrl = response.getWriter();
 					
@@ -1024,6 +1030,57 @@ public class Dataset extends HttpServlet {
 				        	response.getWriter().println(e2.getMessage());
 							e2.printStackTrace();
 						}
+					break;
+					
+				case "clasificacion":
+					String datasetClas = request.getParameter("dataset");
+					String algoritmoClas = request.getParameter("algoritmo");
+	
+					try {
+						dbl = new DatabaseLoader();
+						credentials = VcapHelper.parseVcap();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+		              
+					  dbl.setUser(credentials.getUsername());
+					  dbl.setPassword(credentials.getPassword());
+					  dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
+		              dbl.setQuery("select * from "+datasetClas);
+					  dbl.connectToDatabase();
+					  Instances dataForClas = dbl.getDataSet();
+	
+					  //dataForClas.setClassIndex(dataForClas.numAttributes()-1);
+				    
+					//recupera info del dataset
+					ConnectDB conClas = new ConnectDB ();
+					ResultSet rsClas = null;
+						
+					String cadenaClas = "select * from usuario_tabla where id_usuario='"+usuario.getId()+"' and tabla='"+datasetClas+"'";
+		            rsClas = conClas.getData(cadenaClas);
+		            try {
+		            	while (rsClas.next()){
+		            		dataForClas.setRelationName(rsClas.getString("relation"));
+		            		dataForClas.setClassIndex(rsClas.getInt("classindex"));
+						}
+					}catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+		                
+					    
+					try {
+						Evaluation evalClas = new Evaluation(dataForClas);
+						Object fullAlgoritmoClas = Class.forName(algoritmoClas).newInstance();
+						Classifier clas = (Classifier) fullAlgoritmoClas;
+						clas.buildClassifier(dataForClas);
+						evalClas.evaluateModel((Classifier) fullAlgoritmoClas,dataForClas);
+						response.getWriter().println(evalClas.toSummaryString());
+					}catch (Exception e2) {
+						System.out.println(e2.getClass());
+						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				        response.getWriter().println(e2.getMessage());
+						e2.printStackTrace();
+					}
 					break;
 				default:
 					break;

@@ -1,21 +1,14 @@
 package com.wekaweb.testing;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
+import java.util.Iterator;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import weka.associations.Apriori;
-import weka.associations.AssociatorEvaluation;
-import weka.clusterers.ClusterEvaluation;
-import weka.clusterers.EM;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.BayesNet;
+import weka.core.Capabilities;
+import weka.core.Capabilities.Capability;
 import weka.core.Instances;
-import weka.core.converters.JSONSaver;
-import weka.core.json.JSONInstances;
-import weka.core.json.JSONNode;
-import weka.datagenerators.classifiers.classification.Agrawal;
 
 /**
  * A simple API example of transferring an ARFF file into a MySQL table.
@@ -79,9 +72,27 @@ public class Arff2Database {
       
       System.out.println("JSON : " + a.toString());
       */
-      Apriori alg = new Apriori();
-      AssociatorEvaluation eval = new AssociatorEvaluation();
-      eval.evaluate(alg, data);
+      
+      System.out.println(data.classIndex());
+      data.g
+      data.setClassIndex(data.numAttributes()-1);
+      System.out.println(data.classIndex());
+      
+      Capabilities test = Capabilities.forInstances(data);
+		//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
+		Iterator<Capability> my = test.capabilities();
+		while(my.hasNext()){
+			Capability myc = my.next();
+			System.out.println(myc.name());
+		}
+		
+		
+      BayesNet bay = new BayesNet();
+      bay.buildClassifier(data);
+      
+      Evaluation eval = new Evaluation(data);
+      eval.evaluateModel(bay, data);
+      
       
       System.out.println(eval.toSummaryString());
       
