@@ -74,7 +74,6 @@ public class Arff2Database {
       */
       
       System.out.println(data.classIndex());
-      data.g
       data.setClassIndex(data.numAttributes()-1);
       System.out.println(data.classIndex());
       

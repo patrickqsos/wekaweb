@@ -145,7 +145,6 @@
 			var target = $(event.target),
 				classList = target.attr('class') ? target.attr('class').split(' ') : [],
 				node = this._findNode(target);
-
 			if ((classList.indexOf('click-expand') != -1) ||
 					(classList.indexOf('click-collapse') != -1)) {
 				// Expand or collapse node by toggling child node visibility
@@ -185,7 +184,8 @@
 		// as well as determining whether or not to trigger the nodeSelected event
 		_setSelectedNode: function(node) {
 
-			if (!node) { return; }
+			if (!node) {
+				return; }
 			
 			if (node === this.selectedNode) {
 				this.selectedNode = {};
@@ -277,13 +277,19 @@
 
 				node.nodeId = self.nodes.length;
 				self.nodes.push(node);
-
+				
+				
 				var treeItem = $(self._template.item)
 					.addClass('node-' + self._elementId)
 					//.addClass('disabled')
 					.addClass((node === self.selectedNode) ? 'node-selected' : '')
 					.attr('data-nodeid', node.nodeId)
 					.attr('style', self._buildStyleOverride(node));
+				
+				if(self.options.multipleSelect){
+					(node === self.selectedNode) ? 'node-selected' : 'node-selected';
+				}
+				
 				
 				if(node.disabled)
 					treeItem.addClass('disabled');

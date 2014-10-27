@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -26,6 +27,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -42,6 +46,8 @@ import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.BayesNet;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
+import weka.core.Attribute;
+import weka.core.AttributeStats;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.CapabilitiesHandler;
@@ -200,6 +206,7 @@ public class Dataset extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 //		PrintWriter printer = response.getWriter();
@@ -340,7 +347,7 @@ public class Dataset extends HttpServlet {
 			switch (action) {
 				case "getCapabilities":
 					String datasetCap = request.getParameter("dataset");
-					String [] algoritmos = request.getParameterValues("algoritmos[]");
+					//String [] algoritmos = request.getParameterValues("algoritmos[]");
 					String tree = request.getParameter("tree");
 					
 					ConnectDB conCap = new ConnectDB ();
@@ -471,40 +478,294 @@ public class Dataset extends HttpServlet {
 						e3.printStackTrace();
 					}
 					
-					/*
-	                for(int i=0;i<algoritmos.length;i++){
-						
-						try {
-							Object fullAlgoritmo = Class.forName(algoritmos[i]).newInstance();
-							BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
-						      MethodDescriptor[] methods = bi.getMethodDescriptors();
-						      for (MethodDescriptor method : methods) {
-						        String name = method.getDisplayName();
-						        Method meth = method.getMethod();
-						        if (name.equals("getCapabilities")) {
-						          if (meth.getReturnType().equals(Capabilities.class)) {
-						            Object args[] = {};
-						            Capabilities cap = Capabilities.forInstances(dataCap);
-									Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
-									if(capab.supports(cap)){
-										response.getWriter().println("soporta");
-									}
-									else
-										response.getWriter().println("no sporta");
-									//gi = globalInfo;
-						            break;
-						          }
-						        }
-						      }
-						} catch (Exception e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
-						}
-					}
-					*/
-	                
 					
 	                break;
+	               
+				case "getCapAttr":
+					String datasetCapAttr = request.getParameter("dataset");
+					String treeFilters = request.getParameter("tree");
+					
+					ConnectDB conCapAttr = new ConnectDB ();
+					ResultSet rsCapAttr = null;
+					
+					try {
+						dbl = new DatabaseLoader();
+						credentials = VcapHelper.parseVcap();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					//recupera las instancias del dataset 
+					dbl.setUser(credentials.getUsername());
+					dbl.setPassword(credentials.getPassword());
+					dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
+	                dbl.setQuery("select * from "+datasetCapAttr);
+					dbl.connectToDatabase();
+					Instances dataCapAttr = dbl.getDataSet();
+					  
+					//recupera info del dataset
+					String cadenaCapAttr = "select * from usuario_tabla where id_usuario='"+usuario.getId()+"' and tabla='"+datasetCapAttr+"'";
+					rsCapAttr = conCapAttr.getData(cadenaCapAttr);
+	                try {
+						while (rsCapAttr.next()){
+							dataCapAttr.setRelationName(rsCapAttr.getString("relation"));
+							dataCapAttr.setClassIndex(rsCapAttr.getInt("classindex"));
+							nombreTabla = rsCapAttr.getString("tabla");
+							//resultInfo.put("descripcion",rsInfo.getString("descripcion"));
+							//resultInfo.put("origen",rsInfo.getString("origen"));
+				    	}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
+	                JSONParser parserFilter = new JSONParser();
+					try {
+						JSONArray treeData = (JSONArray) parserFilter.parse(treeFilters);
+						
+						Iterator itData = treeData.iterator();
+						
+						while(itData.hasNext()){
+							try {
+							
+							JSONObject categoria = (JSONObject) itData.next();
+							
+							//categoria.put("atributos", atributos);
+							
+							JSONArray nodes = (JSONArray) categoria.get("nodes");
+							Iterator itNodes = nodes.iterator();
+							while(itNodes.hasNext()){
+								JSONObject algoritmo = (JSONObject) itNodes.next();
+								
+								if(algoritmo.containsKey("subCategoria")){
+									JSONArray nodesAlg = (JSONArray) algoritmo.get("nodes");
+									Iterator itNodesAlg = nodesAlg.iterator();
+									while(itNodesAlg.hasNext()){
+										JSONObject algoritmoSub = (JSONObject) itNodesAlg.next();
+										//System.out.println("\n\n Evaluating: "+algoritmoSub.get("className")+" --> ");
+										Object fullAlgoritmo = Class.forName((String) algoritmoSub.get("className")).newInstance();
+										BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+									      MethodDescriptor[] methods = bi.getMethodDescriptors();
+									      for (MethodDescriptor method : methods) {
+									        String name = method.getDisplayName();
+									        Method meth = method.getMethod();
+									        if (name.equals("getCapabilities")) {
+									          if (meth.getReturnType().equals(Capabilities.class)) {
+									            Object args[] = {};
+									            Capabilities cap = Capabilities.forInstances(dataCapAttr);
+												Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+												
+												if(capab.supports(cap)){
+												
+												}
+												else{
+													algoritmoSub.put("disabled", true);
+													algoritmoSub.put("selectable", false);
+												}
+												break;
+									          }
+									        }
+									      }
+									}
+								}
+								else{
+									//System.out.print("evaluating: "+algoritmo.get("className"));
+									
+									Object fullAlgoritmo = Class.forName((String) algoritmo.get("className")).newInstance();
+									BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+								      MethodDescriptor[] methods = bi.getMethodDescriptors();
+								      for (MethodDescriptor method : methods) {
+								        String name = method.getDisplayName();
+								        Method meth = method.getMethod();
+								        if (name.equals("getCapabilities")) {
+								          if (meth.getReturnType().equals(Capabilities.class)) {
+								            Object args[] = {};
+								            Capabilities cap = Capabilities.forInstances(dataCapAttr);
+											Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+											//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
+											
+											if(capab.supports(cap)){
+												//System.out.println(" soporta");
+											}
+											else{
+												algoritmo.put("disabled", true);
+												algoritmo.put("selectable", false);
+												//System.out.println(" no soporta");
+											}
+											break;
+								          }
+								        }
+								      }
+								}
+							}
+								
+							} catch (Exception e2) {
+								e2.printStackTrace();
+							}
+						}
+						 
+						//JSONObject treeAttr = new JSONObject();
+						JSONArray atributos = new JSONArray();
+						
+						for(int k=0;k<dataCapAttr.numAttributes();k++){
+							JSONObject attr = new JSONObject();
+							attr.put("text",dataCapAttr.attribute(k).name());
+							atributos.add(attr);
+						}
+						//treeData.add(treeAttr);
+						
+						JSONObject trees = new JSONObject();
+						trees.put("treeAlgoritmos", treeData);
+						trees.put("treeAttr", atributos);
+						
+						
+						session.setAttribute("dataAttrFilter", dataCapAttr);
+						response.setContentType("application/json");
+						response.getWriter().println(trees);
+						
+					} catch (Exception e3) {
+						e3.printStackTrace();
+					}
+					
+					break;
+					
+				case "getInfoAttr":
+					boolean m_allEqualWeights = true;
+					String attribute = request.getParameter("attribute");
+					Instances dataAttr = (Instances) session.getAttribute("dataAttrFilter");
+					double w = dataAttr.instance(0).weight();
+				    for (int i = 1; i < dataAttr.numInstances(); i++) {
+				      if (dataAttr.instance(i).weight() != w) {
+				        m_allEqualWeights = false;
+				        break;
+				      }
+				    }
+					
+					Attribute attr = dataAttr.attribute(attribute);
+					
+					AttributeStats stats = dataAttr.attributeStats(dataAttr.attribute(attribute).index());
+					
+					String m_AttributeTypeLab;
+					String m_MissingLab;
+					String m_UniqueLab;
+					String m_DistinctLab;
+					
+					switch (attr.type()) {
+				    case Attribute.NOMINAL:
+				      m_AttributeTypeLab = "Nominal";
+				      break;
+				    case Attribute.NUMERIC:
+				      m_AttributeTypeLab = "Numeric";
+				      break;
+				    case Attribute.STRING:
+				      m_AttributeTypeLab = "String";
+				      break;
+				    case Attribute.DATE:
+				      m_AttributeTypeLab = "Date";
+				      break;
+				    case Attribute.RELATIONAL:
+				      m_AttributeTypeLab = "Relational";
+				      break;
+				    default:
+				      m_AttributeTypeLab = "Unknown";
+				      break;
+				    }
+					
+					long percent = Math.round(100.0 * stats.missingCount / stats.totalCount);
+				    m_MissingLab = "" + stats.missingCount + " (" + percent + "%)";
+				    percent = Math.round(100.0 * stats.uniqueCount / stats.totalCount);
+				    m_UniqueLab = "" + stats.uniqueCount + " (" + percent + "%)";
+				    m_DistinctLab = "" + stats.distinctCount;
+				    
+				    //JSONObject 
+				    JSONObject infoAttr = new JSONObject();
+				    
+				    JSONObject statsAttr = new JSONObject();
+					statsAttr.put("name", attribute);
+					statsAttr.put("type", m_AttributeTypeLab);
+					statsAttr.put("missing", m_MissingLab); 
+					statsAttr.put("distinct", m_DistinctLab);
+					statsAttr.put("unique", m_UniqueLab);
+
+					//Object[] colNames;
+					//Object[][] data
+					JSONObject statsTable = new JSONObject();
+					JSONArray values = new JSONArray();
+					JSONArray headerNames = new JSONArray();
+					
+					if (stats.nominalCounts != null) {
+						statsTable.put("type", "nominal");
+						
+						//JSONArray headerNames = new JSONArray();
+						headerNames.add("No.");
+						headerNames.add("Label");
+						headerNames.add("Count");
+						headerNames.add("Weight");
+						statsTable.put("headerNames", headerNames);
+						
+						//Object[] colNames = { "No.", "Label", "Count", "Weight" };
+					    //Object[][] data = new Object[stats.nominalCounts.length][4];
+					    for (int i = 0; i < stats.nominalCounts.length; i++) {
+					    	JSONArray row = new JSONArray();
+					    	row.add(new Integer(i + 1));
+					    	row.add(attr.value(i));
+					    	row.add(new Integer(stats.nominalCounts[i]));
+					    	row.add(new Double(Utils.doubleToString(stats.nominalWeights[i], 3)));
+					    	/*  
+					    	data[i][0] = new Integer(i + 1);
+					        data[i][1] = attr.value(i);
+					        data[i][2] = new Integer(stats.nominalCounts[i]);
+					        data[i][3] = new Double(Utils.doubleToString(stats.nominalWeights[i], 3));
+					        */
+					    	values.add(row);
+						}
+					    
+					    statsTable.put("values", values);
+							  
+					      //m_StatsTable.setModel(new DefaultTableModel(data, colNames));
+					      //m_StatsTable.getColumnModel().getColumn(0).setMaxWidth(60);
+					      //DefaultTableCellRenderer tempR = new DefaultTableCellRenderer();
+					      //tempR.setHorizontalAlignment(JLabel.RIGHT);
+					      //m_StatsTable.getColumnModel().getColumn(0).setCellRenderer(tempR);
+					    } else if (stats.numericStats != null) {
+					    	statsTable.put("type", "numeric");
+							
+					    	headerNames.add("Statistic");
+							headerNames.add("Value");
+							statsTable.put("headerNames", headerNames);
+							
+							JSONObject valuesNumeric = new JSONObject();
+							valuesNumeric.put("Minimum", Utils.doubleToString(stats.numericStats.min, 3));
+							valuesNumeric.put("Maximum", Utils.doubleToString(stats.numericStats.max, 3));
+							valuesNumeric.put("Mean", Utils.doubleToString(stats.numericStats.mean, 3));
+							valuesNumeric.put("StdDev", Utils.doubleToString(stats.numericStats.stdDev, 3));
+							
+							statsTable.put("values", valuesNumeric);
+							
+					      Object[] colNames = { "Statistic", "Value" };
+					      Object[][] data = new Object[4][2];
+					      data[0][0] = "Minimum";
+					      data[0][1] = Utils.doubleToString(stats.numericStats.min, 3);
+					      data[1][0] = "Maximum";
+					      data[1][1] = Utils.doubleToString(stats.numericStats.max, 3);
+					      data[2][0] = "Mean" + ((!m_allEqualWeights) ? " (weighted)" : "");
+					      data[2][1] = Utils.doubleToString(stats.numericStats.mean, 3);
+					      data[3][0] = "StdDev" + ((!m_allEqualWeights) ? " (weighted)" : "");
+					      data[3][1] = Utils.doubleToString(stats.numericStats.stdDev, 3);
+					      
+					   	
+					     // m_StatsTable.setModel(new DefaultTableModel(data, colNames));
+					    } else {
+					    	
+					      //m_StatsTable.setModel(new DefaultTableModel());
+					    }
+					   // m_StatsTable.getColumnModel().setColumnMargin(4);
+					    
+					infoAttr.put("statsCount",statsAttr);
+					infoAttr.put("statsTable",statsTable);
+					
+					response.setContentType("application/json");
+					response.getWriter().println(infoAttr);
+					//response.getWriter().println(infoAttr);
+					break;
 				case "getInfoDataset":
 					PrintWriter outInfo = response.getWriter();
 					JSONObject resultInfo = new JSONObject();
@@ -766,7 +1027,6 @@ public class Dataset extends HttpServlet {
 						fullAlgoritmo = Class.forName(full).newInstance();
 					} catch (InstantiationException | IllegalAccessException
 							| ClassNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 			        
@@ -875,6 +1135,23 @@ public class Dataset extends HttpServlet {
 					//System.out.println(ag.globalInfo());
 					
 					break;
+					
+				case "deleteAttr":
+					
+					String [] attrRemove = request.getParameterValues("attrRemove[]");
+					Instances dataAttrFilter = (Instances) session.getAttribute("dataAttrFilter");
+					
+					for(String atributo:attrRemove){
+						/*
+						System.out.println(atributo+ " " + dataAttrFilter.attribute(atributo).index());
+						AttributeStats stats = dataAttrFilter.attributeStats(dataAttrFilter.attribute(atributo).index());
+						System.out.println("missing "+stats.missingCount);
+						System.out.println("distinct "+stats.distinctCount);
+						System.out.println("unique "+stats.uniqueCount);
+						*/
+						
+					}
+					break;   
 				case "importGenerated":
 					PrintWriter outImport = response.getWriter();
 		    		
@@ -1170,7 +1447,7 @@ public class Dataset extends HttpServlet {
 	
 	protected void updateDataset(Instances data,PrintWriter out, String nombreTabla){
 		ConnectDB con = new ConnectDB ();
-        int  rsConsulta = 0;
+        //int  rsConsulta = 0;
         System.out.println("instancias: "+data.numInstances());
         //conexion a bd
         try{
