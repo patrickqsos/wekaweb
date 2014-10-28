@@ -254,11 +254,36 @@
 				</div>
 			</div>
 	        
+	        <script id="tmplInfoAttribute" type="text/x-jquery-tmpl">
+    				<strong>Name: </strong>${'${'}name}</br>
+				  	<strong>Type: </strong>${'${'}type}</br>
+				  	<strong>Missing: </strong>${'${'}missing}</br>
+				  	<strong>Distinct: </strong>${'${'}distinct}</br>
+					<strong>Unique: </strong>${'${'}unique}</br>
+					<hr>
+			</script>
+				
 	        <div id="print" class="col-md-8">
 	          <div class="panel panel-primary hidden-print">
 				  <div class="panel-heading">Selected Attribute: </div>
-				  <div id="pnlInfoAttribute" class="panel-body"></div>
+				  <div id="pnlInfoAttribute" class="panel-body" style="margin-top: 2px;margin-bottom: 2px;">
+				  	<strong>Name: </strong>None</br>
+				  	<strong>Type: </strong>None</br>
+				  	<strong>Missing: </strong>None</br>
+				  	<strong>Distinct: </strong>None</br>
+					<strong>Unique: </strong>None</br>
+					<hr>
+					<div id="pnlInstances" class="table-responsive">
+                                <table class="table table-striped table-condensed table-hover" id="dataInstances"></table>
+                            </div><!-- /.table-responsive -->
+				  </div>
 			  </div>
+			  
+			  <div class="panel-body">
+						     <div id="pnlInstancesbackup" class="table-responsive">
+                                <table class="table table-striped table-condensed table-hover" id="dataInstances"></table>
+                            </div><!-- /.table-responsive -->
+              </div><!-- /.panel-body -->
 			  <!--  
 			  <div class="panel panel-primary">
 				  <div class="panel-heading">Resultado:</div>

@@ -1142,6 +1142,8 @@ public class Dataset extends HttpServlet {
 					Instances dataAttrFilter = (Instances) session.getAttribute("dataAttrFilter");
 					
 					for(String atributo:attrRemove){
+						
+						dataAttrFilter.deleteAttributeAt(dataAttrFilter.attribute(atributo).index());
 						/*
 						System.out.println(atributo+ " " + dataAttrFilter.attribute(atributo).index());
 						AttributeStats stats = dataAttrFilter.attributeStats(dataAttrFilter.attribute(atributo).index());
@@ -1149,8 +1151,9 @@ public class Dataset extends HttpServlet {
 						System.out.println("distinct "+stats.distinctCount);
 						System.out.println("unique "+stats.uniqueCount);
 						*/
-						
 					}
+					
+					response.getWriter().println(dataAttrFilter.numAttributes());
 					break;   
 				case "importGenerated":
 					PrintWriter outImport = response.getWriter();
