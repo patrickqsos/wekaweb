@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="images/favicon.ico">
 
     <title>Registrarse - WWA</title>
 	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -79,7 +79,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<%=request.getContextPath()%>">Weka Web Application</a>
+          <img src='images/cloud3.png' class='img-responsive' style="float: left; width: 50px; display: inline-block;padding-right: 5px;"/>
+          <a class="navbar-brand" href="<%=request.getContextPath()%>" style="display: inline-block;">Weka Web Application</a>
         </div>
         <div class="navbar-collapse collapse">
         	
@@ -128,7 +129,7 @@
     							<label for="inputEmail">Email</label>
     						</div>
     						<div class="col-sm-8">
-    							<input class="form-control" id="inputEmail" name="inputEmail" type="email" required>
+    							<input value="dadelos-38@hotmail.com" class="form-control" id="inputEmail" name="inputEmail" type="email" required>
     							<div class="help-block with-errors"></div>
     						</div>
     					</div>

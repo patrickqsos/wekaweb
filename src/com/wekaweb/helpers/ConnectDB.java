@@ -95,7 +95,7 @@ public class ConnectDB {
     return Cadena;
   }
 
-  public  boolean Existe(String Consulta)
+  public  boolean exists(String Consulta)
   {
     boolean existe=false;
     try

@@ -82,6 +82,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+          <img src='images/cloud3.png' class='img-responsive' style="float: left; width: 50px; display: inline-block;padding-right: 5px;"/>
           <a class="navbar-brand" href="<%=request.getContextPath()%>/Main?action=index">Weka Web Application</a>
         </div>
         <div class="navbar-collapse collapse">
@@ -134,7 +135,7 @@
         	<div class="col-md-4 hidden-print">
         		<h3>Seleccionar dataset:</h3>
 			
-        		<div class="alert alert-dismissible alert-danger" role="alert" id="msgAlgoritmo">
+        		<div class="alert alert-dismissible alert-danger" role="alert" id="msgBox">
 					<button id="btnClose" type="button" class="close" onclick="$('.alert').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="message">message</span>
 				</div>
 				
@@ -162,44 +163,23 @@
 					  <div class="btn-group">
 					    <button id="btnInvert" type="button" class="btn btn-default"><span class="glyphicon glyphicon-print"></span> Invert</button>
 					  </div>
+					  <!--  
 					  <div class="btn-group">
 					    <button id="btnPattern" type="button" class="btn btn-default"><span class="glyphicon glyphicon-upload"></span> Pattern</button>
 					  </div>
+					  -->
 					</div>
 				</div>
 				
-				<!--  
-				<h3 class="text-center">Basic Example</h3>
-	            	<ul class="list-group checked-list-box">
-	                  <li class="list-group-item">Cras justo odio</li>
-	                  <li class="list-group-item">Dapibus ac facilisis in</li>
-	                  <li class="list-group-item">Morbi leo risus</li>
-	                  <li class="list-group-item">Porta ac consectetur ac</li>
-	                  <li class="list-group-item">Vestibulum at eros</li>
-	                  <li class="list-group-item">Cras justo odio</li>
-	                  <li class="list-group-item">Dapibus ac facilisis in</li>
-	                  <li class="list-group-item">Morbi leo risus</li>
-	                  <li class="list-group-item">Porta ac consectetur ac</li>
-	                  <li class="list-group-item">Vestibulum at eros</li>
-	                </ul>
-	            <button class="btn btn-primary col-xs-12" id="get-checked-data">Get Checked Data</button>
-	            
-	            <div id="display-json"></div>
-	            -->
-	            
-	            <div class="row">
+				<div class="row">
 	            	<div class="col-md-10 hidden-print leftrow">
-	            	<div id="treeAtributos"></div>
-        			
+	            		<div id="treeAtributos"></div>
         			</div>
-        			<div id="checkboxesAttr" class="col-md-2 hidden-print rightrow">
-        				
-        				
-        			</div>
+        			<div id="checkboxesAttr" class="col-md-2 hidden-print rightrow"></div>
 	            </div>
 				
         		<div class="form-group">
- 		       		<button id="btnRemove" type="button" class="btn btn-danger btn-block">Remove</button>
+ 		       		<button id="btnRemove" data-loading-text="Trabajando..." type="button" class="btn btn-danger btn-block" disabled="disabled">Remove</button>
 				</div>
 				
 				<h3>Filtros:</h3>
@@ -207,7 +187,7 @@
 				<div id="treeAlgoritmos"></div>
         		  
         		<input id="inputDataset" type="hidden">  
-        		<input id="inputAlgoritmo" type="hidden">  
+        		<input id="inputAttribute" type="hidden" value="false">  
         		
         		<div class="form-group">
  		       		<button id="btnApply" data-loading-text="Trabajando..." type="button" class="btn btn-success btn-block">Apply</button>

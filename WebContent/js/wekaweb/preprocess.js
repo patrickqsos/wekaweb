@@ -1,10 +1,6 @@
 /**
  * 
  */
-
-		$('.check').on('click',function(event){
-			alert('clicked');
-		});
 		
 function getTreeAlgoritmos() {
    		var tree = [
@@ -280,25 +276,38 @@ function getTreeAlgoritmos() {
 	    return tree;
 	}
     
-	 	
+	
+	function countCheckbox(){
+		var c=0;
+		$("input:checkbox[name=attr]:checked").each(function(){
+			c++;
+		})
+		if(c != 0)
+		    $('#btnRemove').prop('disabled', false);
+		else
+		    $('#btnRemove').prop('disabled', true);
+		
+		return c;
+		
+	}
 	$(document).ready(function() {
 		
 		$('#datasetList > .panel').on('show.bs.collapse', function (e) {
 				$(this).removeClass( "panel-default" ).addClass( "panel-primary" );
-	        });
+	    });
 			
 		$('#datasetList > .panel').on('hide.bs.collapse', function (e) {
 			$(this).removeClass( "panel-primary" ).addClass( "panel-default" );
 	    });
 			
-		$('#msgAlgoritmo').hide();
+		$('#msgBox').hide();
 		$('#msgGenerated').hide();
 		
 		$('#treeAlgoritmos').treeview({data: getTreeAlgoritmos(),levels:1,showTags: true});
 		
 		//$('#treeAtributos').treeview({data: getTreeAtributos(),levels:2,showTags: true});
 		
-		$('#treeDatasets').treeview({data: getTreeDatasets(),levels:1,showTags: true});
+		$('#treeDatasets').treeview({data: getTreeDatasets(),levels:2,showTags: true});
 		
 		$('#treeAlgoritmos').on('nodeSelected', function(event, node) {
 		    
@@ -331,11 +340,10 @@ function getTreeAlgoritmos() {
 		});
 		
 		$('#treeAtributos').on('nodeSelected', function(event, node) {
-			console.log(node.text);
+			//console.log(node.text);
 			$.ajax({
            		type: 'post',
            		url: 'Dataset',
-           		//dataType: 'JSON',
            		data: {
            			action: 'getInfoAttr',
            			attribute: node.text
@@ -392,6 +400,7 @@ function getTreeAlgoritmos() {
 				}
            	});
 		});
+		
 		$('#treeDatasets').on('nodeSelected', function(event, node) {
 		    
 			var algoritmos = [];
@@ -424,21 +433,24 @@ function getTreeAlgoritmos() {
            			$('#checkboxesAttr').empty();
            	    },
            	 	success: function(data){
-           	 	 	//console.log(data[0].atributos);
-           	 		
-           	 		for(var i=0;i<data.treeAttr.length;i++){
+           	 	 	for(var i=0;i<data.treeAttr.length;i++){
            	 			$('#checkboxesAttr').append();
-           	 			var checkbox = '<div class="list-group-item">'+
+           	 			var checkbox = '<div class="list-group-item cont">'+
         					'<input type="checkbox" name="attr" data-nodeid="'+i+'" value="'+data.treeAttr[i].text+'">'+
         				'</div>';
            	 			$('#checkboxesAttr').append(checkbox);
        	 			}
            	 		$('#treeAtributos').treeview({data: data.treeAttr,levels:1,showTags: true,selectedBackColor:"#80899B"});
     				$('#treeAlgoritmos').treeview({data: data.treeAlgoritmos,levels:2,showTags: true});
-	    			$('#btnImprimir').prop('disabled', true);
+	    			
+    				$('#btnImprimir').prop('disabled', true);
 					$('#btnImportar').prop('disabled', true);
 					$('#btnExportar').prop('disabled', true);
 					
+					$("input:checkbox[name=attr]").change(function(){
+						countCheckbox();
+					});
+				
            	 	},
            		error: function(){
            			btn.button('reset');
@@ -447,26 +459,30 @@ function getTreeAlgoritmos() {
 		    
 		});
 		
-		$("input:checkbox[name=attr]").click(function(){
+		
+		$("input:checkbox[name=attr]").change(function(){
 			alert('cheked');
 		});
 		
 		$('#btnAll').click(function(){
 			$("input:checkbox[name=attr]").each(function(){
 				$(this).prop('checked','checked');
-			})
+			});
+			countCheckbox();
 		});
 		
 		$('#btnNone').click(function(){
 			$("input:checkbox[name=attr]").each(function(){
 				$(this).prop('checked','');
-			})
+			});
+			countCheckbox();
 		});
 		
 		$('#btnInvert').click(function(){
 			$("input:checkbox[name=attr]").each(function(){
 				($(this).prop('checked') ? $(this).prop('checked','') : $(this).prop('checked','checked') );
-			})
+			});
+			countCheckbox();
 		});
 		
 		$('#btnPattern').click(function(){
@@ -480,7 +496,7 @@ function getTreeAlgoritmos() {
 			$("input:checkbox[name=attr]:checked").each(function(){
 				checksToRemove.push($(this).data("nodeid"))
 				//attrToRemove.push($(this).val());
-			})
+			});
 			
 			console.log(attrToRemove);
 			console.log(checksToRemove);
@@ -488,61 +504,81 @@ function getTreeAlgoritmos() {
 		});
 		
 		$('#btnRemove').click(function(){
-			var attrRemove = [];
 			
-			var attrToRemove = [];
-			var checksToRemove = [];
+			$(this).button('loading');
 			
-			$('#treeAtributos > ul > li').each(function(){
-				attrToRemove.push($(this).data("nodeid"));
-			});
+			var countAttr = $('#treeAtributos > ul').find('li').length;
+			var countCheck = countCheckbox();
 			
-			$("input:checkbox[name=attr]:checked").each(function(){
-				checksToRemove.push($(this).data("nodeid"))
-				attrRemove.push($(this).val());
-			})
-			
-			$.ajax({
-           		type: 'post',
-           		url: 'Dataset',
-           		//dataType: 'JSON',
-           		data: {
-           			action: 'deleteAttr',
-           			//dataset: dataset,
-           			attrRemove: attrRemove,
-           		//	tree: JSON.stringify(tree),
-           		},
-           		beforeSend: function(){
-           			//vaciamos el div que contiene el resultado del algoritmo
-           	 		$('#pnlResult').empty();
-           	 		$('#pnlResult').append("<img src='images/loading2.gif' class='img-responsive center-block'/>");
-           	 	},
-           	 	success: function(data){
-	           	 	$("input:checkbox[name=attr]:checked").each(function(){
-	    				$(this).remove();
-	    			});
-	           	 	
-	           	 	for(var i=0;i<checksToRemove.length;i++){
+			if(countAttr == countCheck){
+				$('#message').text("No se puede eliminar todos los atributos");
+				$('#msgBox').show();
+				$('#btnRemove').button('reset');
+			}
+			else{
+				
+				var attrRemove = [];
+				var attrToRemove = [];
+				var checksToRemove = [];
+				
+				$('#treeAtributos > ul > li').each(function(){
+					attrToRemove.push($(this).data("nodeid"));
+				});
+				
+				$("input:checkbox[name=attr]:checked").each(function(){
+					checksToRemove.push($(this).data("nodeid"))
+					attrRemove.push($(this).val());
+				})
+				
+				$.ajax({
+	           		type: 'post',
+	           		url: 'Dataset',
+	           		data: {
+	           			action: 'deleteAttr',
+	           			attrRemove: attrRemove,
+	           		},
+	           		beforeSend: function(){
+	           			//vaciamos el div que contiene el resultado del algoritmo
+	           	 		$('#pnlResult').empty();
+	           	 		$('#pnlResult').append("<img src='images/loading2.gif' class='img-responsive center-block'/>");
+	           	 	},
+	           	 	success: function(data){
+		           	 	$("input:checkbox[name=attr]:checked").each(function(){
+		    				$(this).closest('.cont').remove();
+		    			});
+		           	 	
+			            for(var i=0;i<checksToRemove.length;i++){
+			           	 	$('#treeAtributos > ul > li').each(function(){
+				 				$(this).data("nodeid") == checksToRemove[i] ? $(this).remove() : '';
+				 			});
+		           	 	}
+	           	 		
+			            $('#msgBox').removeClass( "alert-danger" ).addClass( "alert-success" );
+						$('#message').text('El atributo fue removido');
+						$('#msgBox').show();
 						
-	           	 	}
-           	 		//alert(data);
-           	 		$('#pnlResult').empty();
-       	        	$('#pnlResult').html("<pre>"+data+"</pre>");
-		        	
-		        	$('#btnImprimir').prop('disabled', false);
-					$('#btnImportar').prop('disabled', false);
-					$('#btnExportar').prop('disabled', false);
-					
-					$('#btnStart').button('reset');
-           	 	},
-           		error: function(data){
-           			$('#msgGenerated').removeClass( "alert-success" ).addClass( "alert-danger" );
-					$('#messageGen').text(data.responseText);
-					$('#msgGenerated').show();
-					$('#btnStart').button('reset');
-				}
-           	});
-			
+						$('#btnRemove').prop('disabled', true);
+						
+			            $('#pnlResult').empty();
+	       	        	$('#pnlResult').html("<pre>"+data+"</pre>");
+			        	
+			        	$('#btnImprimir').prop('disabled', false);
+						$('#btnImportar').prop('disabled', false);
+						$('#btnExportar').prop('disabled', false);
+						
+						$('#btnRemove').button('reset');
+						
+	           	 	},
+	           		error: function(data){
+	           			$('#msgGenerated').removeClass( "alert-success" ).addClass( "alert-danger" );
+						$('#messageGen').text(data.responseText);
+						$('#msgGenerated').show();
+						$('#btnStart').button('reset');
+						$('#btnRemove').button('reset');
+						
+					}
+	           	});
+			}
 		});
 		
 		$('#btnStart').click(function () {

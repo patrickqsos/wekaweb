@@ -32,19 +32,30 @@ public class VcapHelper {
 		JSONParser parser = new JSONParser();  
 	    
 		//production mode
-		/*
+		
 		String vcapEnv = System.getenv("VCAP_SERVICES");  
 	    if (vcapEnv == null) {  
-	        return null;  
+	        //return null; 
+	        try {
+				//VCAP = (JSONObject) parser.parse(new FileReader("E://Environment/vcaplocal.json"));
+		    	//vcapEnv = new FileReader("/Users/Patrick/Dev/vcaplocal.json");
+	        	VCAP = (JSONObject) parser.parse(new FileReader("/Users/Patrick/Dev/vcaplocal.json"));
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    else{
+	    	VCAP = (JSONObject) parser.parse(vcapEnv); 
 	    }
 	    
-	    VCAP = (JSONObject) parser.parse(vcapEnv); 
-	    */
+	    
 		//end production mode
 		
 		//development mode
 		
-	    
+	    /*
 	    try {
 			//VCAP = (JSONObject) parser.parse(new FileReader("E://Environment/vcaplocal.json"));
 	    	VCAP = (JSONObject) parser.parse(new FileReader("/Users/Patrick/Dev/vcaplocal.json"));
@@ -53,7 +64,7 @@ public class VcapHelper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
 	    //end development mode
 	    
 	    

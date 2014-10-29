@@ -618,6 +618,7 @@ public class Dataset extends HttpServlet {
 						
 						
 						session.setAttribute("dataAttrFilter", dataCapAttr);
+						session.setAttribute("nombreTabla", nombreTabla);
 						response.setContentType("application/json");
 						response.getWriter().println(trees);
 						
@@ -1153,7 +1154,9 @@ public class Dataset extends HttpServlet {
 						*/
 					}
 					
-					response.getWriter().println(dataAttrFilter.numAttributes());
+					updateDataset(dataAttrFilter, response.getWriter(), (String) session.getAttribute("nombreTabla"));
+					
+					//response.getWriter().println(dataAttrFilter.numAttributes());
 					break;   
 				case "importGenerated":
 					PrintWriter outImport = response.getWriter();

@@ -49,7 +49,6 @@ public class Registro extends HttpServlet {
      */
     public Registro() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -153,7 +152,8 @@ public class Registro extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher dispatcher = null;
     	
-		
+		String context = request.getContextPath();	
+		//System.out.println(request.getContextPath());
 			String action = request.getParameter("action");
 			
 			switch (action) {
@@ -170,119 +170,132 @@ public class Registro extends HttpServlet {
             	//se valida que el email no este registrado
             	ConnectDB con = new ConnectDB ();
             	ResultSet rs = null;
+            	
+            	String mycad = "select * from usuario where email='"+email+"'";
+                
 				String cad = "select COUNT(*) as total from usuario where email='"+email+"'";
-                rs = con.getData(cad);
-                try {
-                	while (rs.next()) {
-                        if( rs.getInt("total") > 0 ) {
+				if(!con.exists(mycad)){
+					//se valida que los campos no esten vacios
+                	if(nombre.isEmpty() || apellido.isEmpty() || email.isEmpty() || password.isEmpty())
+                		validate = false;
+                	
+                	//se valida que los passwords coincidan
+                	if(password.compareTo(confirmPassword) != 0)
+                		validate = false;
+                	
+                	if(validate){
+                		//se genera un token de validacion
+                    	token = getCadenaAlfanumAleatoria(30);
+                    	
+                		int rsConsulta = 0;
+                        String cadena= "insert into usuario values(null,'"+nombre+"','"+apellido+"','"+email+"','"+password+"','"+token+"','0','usuario')";
+                        
+                        System.out.println(cadena);
+                        rsConsulta = con.InsertaDatos(cadena);
+                        
+                        if (rsConsulta == -1 ){
                         	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    		out.println("El email ingresado ya esta registrado");
+                    		out.println("Los datos estan incompletos o equivocados. Vuelve a intentarlo");
                         	out.flush();
-                        } else {
-                        	//se valida que los campos no esten vacios
-                        	if(nombre.isEmpty() || apellido.isEmpty() || email.isEmpty() || password.isEmpty())
-                        		validate = false;
-                        	
-                        	//se valida que los passwords coincidan
-                        	if(password.compareTo(confirmPassword) != 0)
-                        		validate = false;
-                        	
-                        	if(validate){
-                        		//se genera un token de validacion
-                            	token = getCadenaAlfanumAleatoria(20);
-                            	
-                        		int rsConsulta = 0;
-                                String cadena= "insert into usuario values(null,'"+nombre+"','"+apellido+"','"+email+"','"+password+"','"+token+"','0','usuario')";
-                                
-                                System.out.println(cadena);
-                                rsConsulta = con.InsertaDatos(cadena);
-                                
-                                if (rsConsulta == -1 ){
-                                	out.println("Los datos estan incompletos o equivocados. Vuelve a intentarlo");
-                                	out.flush();
-                                	//dispatcher = request.getRequestDispatcher("/error.jsp"); 
-                        			//dispatcher.forward(request,response);
-                    			}
-                                else{
-                                	//out.println("Verifica tu correo");
-                                	//dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/indexUsuarioRegistrado.jsp"); 
-                        			//dispatcher.forward(request,response);
-                                	try{
-                                 	   // Propiedades de la conexión
-                                 	   Properties props = new Properties();
-                                 	   props.setProperty("mail.smtp.host", "smtp.gmail.com");
-                                 	   props.setProperty("mail.smtp.starttls.enable", "true");
-                                 	   props.setProperty("mail.smtp.port", "587");
-                                 	   props.setProperty("mail.smtp.user", "patrickqsos@gmail.com");
-                                 	   props.setProperty("mail.smtp.auth", "true");
-                                 	 
-                                 	   // Preparamos la sesion
-                                 	   Session session = Session.getDefaultInstance(props);
-                                 	   // Construimos el mensaje
-                                 	   MimeMessage message = new MimeMessage(session);
-                                 	   //la persona k tiene k verificar
-                                 	   message.setFrom(new InternetAddress("patrickqsos@gmail.com"));
-                                 	   message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
-                                 	   message.addHeader("Disposition-Notification-To","gcorreacaja@hotmail.com");
-                                 	   message.setSubject("Correo de verificacion, porfavor no responder");
-                                 	   message.setText(
-                                 			   "Este es un correo de verificacion \n" +
-                                 	           "Gracias por registrarse \n" +
-                                 	           "Porfavor haga click en el siguiente enlace\n" +
-                                 	           "para seguir con la verificacion de sus datos \n" +
-                                 	           
-                     						   "<a href=\"http://localhost:8080"+request.getContextPath()+"/Registro?action=activate&email="+email+"&token="+token+"\">Enlace</a>  ",
+                        	//dispatcher = request.getRequestDispatcher("/error.jsp"); 
+                			//dispatcher.forward(request,response);
+            			}
+                        else{
+                        	String vcapEnv = System.getenv("VCAP_SERVICES");  
+                    	    String flag = "";
+                        	String urlInit = "";
+                        	if (vcapEnv == null) {  
+                        		urlInit = "http://localhost:8080"+request.getContextPath();
+                        		flag = "local";
+                    	    }
+                    	    else{
+                    	    	urlInit = "http://wekaweb.aws.af.cm";
+                    	    	flag = "cloud";
+                    	    }
+                        	//out.println("Verifica tu correo");
+                        	//dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/indexUsuarioRegistrado.jsp"); 
+                			//dispatcher.forward(request,response);
+                        	try{
+                         	   // Propiedades de la conexión
+                         	   Properties props = new Properties();
+                         	   props.setProperty("mail.smtp.host", "smtp.gmail.com");
+                         	   props.setProperty("mail.smtp.starttls.enable", "true");
+                         	   props.setProperty("mail.smtp.port", "587");
+                         	   props.setProperty("mail.smtp.user", "contact.wekaweb@gmail.com");
+                         	   props.setProperty("mail.smtp.auth", "true");
+                         	 
+                         	   // Preparamos la sesion
+                         	   Session session = Session.getDefaultInstance(props);
+                         	   // Construimos el mensaje
+                         	   MimeMessage message = new MimeMessage(session);
+                         	   //la persona k tiene k verificar
+                         	   message.setFrom(new InternetAddress("contact.wekaweb@gmail.com"));
+                         	   message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
+                         	   message.addHeader("Disposition-Notification-To","contact.wekaweb@gmail.com");
+                         	   message.setSubject("Correo de verificacion, porfavor no responder");
+                         	   
+                         	   String msg = buildTemplate(urlInit, email, token);
+                         	   
+                         	   String mymsg = test();
+                         	  message.setText(msg,"ISO-8859-1",
+                        	           "html");
+                               		
+                         	   /*
+                         	   message.setText(
+                         			   "Este es un correo de verificacion </br>" +
+                         	           "Gracias por registrarse </br>" +
+                         	           "Porfavor haga click en el siguiente enlace </br>" +
+                         	           "para seguir con la verificacion de sus datos </br></br>" +
+                         	            flag + "</br>" +
+             						   "<a href=\""+urlInit+"/Registro?action=activate&email="+email+"&token="+token+"\">Enlace</a>  </br>",
 
-                                 	        
-                     							//"<a href=\"http://localhost:8080/PruebadeConectados/ActivacionCuenta?usuario=%22+usuario+%22&aleatorio=%22+aleatoria+%22%5C%22\">Enlace</a>  ",
-                                 	           "ISO-8859-1",
-                                 	           "html");
-                                 	   // Lo enviamos.
-                                 	   Transport t = session.getTransport("smtp");
-                                 	   t.connect("patrickqsos@gmail.com", "delta3.YO");
-                                 	   t.sendMessage(message, message.getAllRecipients());
-                                 	   // Cierre.
-                                 	   t.close();
-                                 	   
-                                 	  out.println("El registro fue exitoso pero primero debe activar su cuenta. Porfavor revice su email");
-                                 	  
-                                  	
-                                 	}
-                                 	catch (Exception e){
-                                 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                                 	   String i = e.getMessage();
-                                 	   out.println("Hubo un problema al enviar el correo de validacion. Por favor vuelva a intentarlo");
-                                 	}
-                                	finally{
-                                		out.flush();
-                                	}
-                                	
-                    			}
+                         	        
+             							//"<a href=\"http://localhost:8080/PruebadeConectados/ActivacionCuenta?usuario=%22+usuario+%22&aleatorio=%22+aleatoria+%22%5C%22\">Enlace</a>  ",
+                         	           "ISO-8859-1",
+                         	           "html");
+                         	   */
+                         	   // Lo enviamos.
+                         	   Transport t = session.getTransport("smtp");
+                         	   t.connect("contact.wekaweb@gmail.com", "eemNC300");
+                         	   t.sendMessage(message, message.getAllRecipients());
+                         	   // Cierre.
+                         	   t.close();
+                         	   
+                         	  out.println("El registro fue exitoso pero primero debe activar su cuenta. Porfavor revice su email");
+                         	  
+                          	
+                         	}
+                         	catch (Exception e){
+                         		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                         		String i = e.getMessage();
+                         		System.out.println(i);
+                         		out.println("Hubo un problema al enviar el correo de validacion. Por favor vuelva a intentarlo");
+                         	}
+                        	finally{
+                        		out.flush();
                         	}
-                        	else{
-                        		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        		out.println("Los datos estan incompletos o equivocados. Vuelve a intentarlo");
-                            	out.flush();
-                           }
-                        }
-                    }
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+                        	
+            			}
+                	}
+                	else{
+                		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                		out.println("Los datos estan incompletos o equivocados. Vuelve a intentarlo");
+                    	out.flush();
+                   }
 				}
-                finally{
-                	con.closeConnection();
-                }
-                
-                
-            	
-            	
-            	
-            	
+				
+				else{
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            		out.println("El email ingresado ya esta registrado");
+                	out.flush();
+				}
+				
+				con.closeConnection();
+				
 				break;
 
 			case "activate":
-				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/indexUsuarioRegistrado.jsp"); 
+				dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/indexUsuario.jsp"); 
 				dispatcher.forward(request,response); 
 				break;
 				
@@ -302,7 +315,7 @@ public class Registro extends HttpServlet {
 		while ( i < longitud){
 			char c = (char)r.nextInt(255);
 			//System.out.println("char:"+c);
-			if ( (c >= '0' && c <=9) || (c >='A' && c <='Z') ){
+			if ( (c >= '0' && c <='9') || (c >='A' && c <='Z') ){
 				cadenaAleatoria += c;
 				i ++;
 			}
@@ -310,5 +323,43 @@ public class Registro extends HttpServlet {
 		  
 		return cadenaAleatoria;
 	}
+	
+	public String buildTemplate(String urlInit,String email, String token){
+		String message = "";
+		
+		message +=	"<html>" +
+			    "<body>" +
+			        "<div style=\"text-align: center; background-color: #FFF;\">" +
+			            "<div style=\"width: 70%; border: 1px solid #027fbf; padding: 5px 5px;\">" +
+			                "<div>" +
+			                    "<img style=\"width: 100%;\" src=\"https://drive.google.com/uc?id=0Bys6OfQySS_bc3hzeFZrQkJaVmc\"/>" +
+			                "</div>" +
+			                "<div style=\"text-align: center; font-family: tahoma;font-size: 20px; margin: 5px auto; padding: 5px;\">" +
+			                "Este es un correo de verificacion </br>" +
+              	           "Gracias por registrarse </br>" +
+              	           "Porfavor haga click en el siguiente enlace </br>" +
+              	           "para seguir con la verificacion de sus datos </br></br>" +
+              	           "<a href=\""+urlInit+"/Registro?action=activate&email="+email+"&token="+token+"\">Enlace</a>  </br>"+
 
+			               "</div>" +
+			            "</div>" +
+			        "</div>" +
+			    "</body>" +
+			"</html>";
+		
+		return message;
+	}
+
+	public String test(){
+		String msg = "";
+		msg += "<html>" +
+				"<body>" +
+				"hola" +
+				//"<iframe src=\"http://localhost:8080/WekaWeb/Main?action=importar\" width=\"100%\" height=\"500\" frameborder=\"0\"></iframe>" +
+				"<iframe src=\"http://www.google.com\" width=\"100%\" height=\"500\" frameborder=\"0\"></iframe>" +
+				
+				"</body>" +
+				"</html>";
+	return msg;
+	}
 }
