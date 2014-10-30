@@ -1,14 +1,7 @@
 package com.wekaweb.testing;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.Iterator;
-
-import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.BayesNet;
 import weka.core.Capabilities;
-import weka.core.Capabilities.Capability;
-import weka.core.Instances;
+import weka.filters.unsupervised.attribute.Standardize;
 
 /**
  * A simple API example of transferring an ARFF file into a MySQL table.
@@ -29,15 +22,20 @@ public class Arff2Database {
    * @param args    the commandline arguments
    */
   public static void main(String[] args) throws Exception {
-    
 	  
+	  Capabilities cap = new Standardize().getCapabilities();
+	  
+	  System.out.println(cap.toString());
+      
+	  
+	 /* 
 	  
 	  BufferedReader br = new BufferedReader(new FileReader("/Users/Patrick/weather.arff"));
 	  //File file = new File("E:\\Environment\\weather.json");
 	  
       Instances data = new Instances(br);
 	  
-	  /*
+	  
 		data.setClassIndex(data.numAttributes() - 1);
 	
 	    DatabaseSaver save = new DatabaseSaver();
@@ -50,10 +48,10 @@ public class Arff2Database {
 	    save.setTableName("weather_public");
 	    save.connectToDatabase();
 	    save.writeBatch();
-	    */
+	    
       
       
-      /*
+      
       JSONNode n = new JSONNode();
       JSONSaver js = new JSONSaver();  
       JSONInstances j = new JSONInstances();
@@ -71,7 +69,7 @@ public class Arff2Database {
       a= (JSONObject) b.parse(buffer.toString());
       
       System.out.println("JSON : " + a.toString());
-      */
+      
       
       System.out.println(data.classIndex());
       data.setClassIndex(data.numAttributes()-1);
@@ -94,6 +92,7 @@ public class Arff2Database {
       
       
       System.out.println(eval.toSummaryString());
+      */
       
      
   }

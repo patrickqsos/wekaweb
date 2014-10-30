@@ -50,8 +50,8 @@
     	            selectable: false,
     	            nodes: [
     	            	{
-    	            		text: "Canopy",
-    	            		className: "weka.clusterers.Canopy",
+    	            		"text": "Canopy",
+    	            		"className": "weka.clusterers.Canopy",
     	            	    
     	            	},
     	            	{

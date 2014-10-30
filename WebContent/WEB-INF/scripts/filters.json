@@ -1,0 +1,319 @@
+[
+    {
+        "text":"Filters",
+        "selectable": false,
+        "nodes":[
+            {
+                "text": "AllFilter",
+                "className": "weka.filters.AllFilter"
+            },
+            {
+                "text": "MultiFilter",
+                "className": "weka.filters.MultiFilter"
+            },
+            {
+                "subCategoria": "true",
+                "text": "Supervised",
+                "selectable": false,
+                "nodes": [
+                    {
+                        "subCategoria": "true",
+                        "text": "Attribute",
+                        "selectable": false,
+                        "nodes": [
+                            {
+                                "text": "AddClassification",
+                                "className": "weka.filters.supervised.attribute.AddClassification"
+                            },
+                            {
+                                "text": "AttributeSelection",
+                                "className": "weka.filters.supervised.attribute.AttributeSelection"
+                            },
+                            {
+                                "text": "ClassOrder",
+                                "className": "weka.filters.supervised.attribute.ClassOrder"
+                            },
+                            {
+                                "text": "Discretize",
+                                "className": "weka.filters.supervised.attribute.Discretize"
+                            },
+                            {
+                                "text": "MergeNominalValues",
+                                "className": "weka.filters.supervised.attribute.MergeNominalValues"
+                            },
+                            {
+                                "text": "NominalToBinary",
+                                "className": "weka.filters.supervised.attribute.NominalToBinary"
+                            },
+                            {
+                                "text": "PartitionMembership",
+                                "className": "weka.filters.supervised.attribute.PartitionMembership"
+                            }
+                        ]
+                    },
+                    {
+                        "subCategoria": "true",
+                        "text": "Instance",
+                        "selectable": false,
+                        "nodes": [
+                            {
+                                "text": "Resample",
+                                "className": "weka.filters.supervised.instance.Resample"
+                            },
+                            {
+                                "text": "SpreadSubsample",
+                                "className": "weka.filters.supervised.instance.SpreadSubsample"
+                            },
+                            {
+                                "text": "StratifiedRemoveFolds",
+                                "className": "weka.filters.supervised.instance.StratifiedRemoveFolds"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subCategoria": "true",
+                "text": "Unsupervised",
+                "selectable": false,
+                "nodes": [
+                    {
+                        "subCategoria": "true",
+                        "text": "Attribute",
+                        "selectable": false,
+                        "nodes": [
+                            {
+                                "text": "Add",
+                                "className": "weka.filters.unsupervised.attribute.Add"
+                            },
+                            {
+                                "text": "AddCluster",
+                                "className": "weka.filters.unsupervised.attribute.AddCluster"
+                            },
+                            {
+                                "text": "AddExpression",
+                                "className": "weka.filters.unsupervised.attribute.AddExpression"
+                            },
+                            {
+                                "text": "AddID",
+                                "className": "weka.filters.unsupervised.attribute.AddID"
+                            },
+                            {
+                                "text": "AddNoise",
+                                "className": "weka.filters.unsupervised.attribute.AddNoise"
+                            },
+                            {
+                                "text": "AddUserFields",
+                                "className": "weka.filters.unsupervised.attribute.AddUserFields"
+                            },
+                            {
+                                "text": "AddValues",
+                                "className": "weka.filters.unsupervised.attribute.AddValues"
+                            },
+                            {
+                                "text": "ChangeDateFormat",
+                                "className": "weka.filters.unsupervised.attribute.ChangeDateFormat"
+                            },
+                            {
+                                "text": "ClassAssigner",
+                                "className": "weka.filters.unsupervised.attribute.ClassAssigner"
+                            },
+                            {
+                                "text": "ClusterMembership",
+                                "className": "weka.filters.unsupervised.attribute.ClusterMembership"
+                            },
+                            {
+                                "text": "Copy",
+                                "className": "weka.filters.unsupervised.attribute.Copy"
+                            },
+                            {
+                                "text": "FirstOrder",
+                                "className": "weka.filters.unsupervised.attribute.FirstOrder"
+                            },
+                            {
+                                "text": "InterquartileRange",
+                                "className": "weka.filters.unsupervised.attribute.InterquartileRange"
+                            },
+                            {
+                                "text": "KernelFilter",
+                                "className": "weka.filters.unsupervised.attribute.KernelFilter"
+                            },
+                            {
+                                "text": "MakeIndicator",
+                                "className": "weka.filters.unsupervised.attribute.MakeIndicator"
+                            },
+                            {
+                                "text": "MergeInfrequentNominalValues",
+                                "className": "weka.filters.unsupervised.attribute.MergeInfrequentNominalValues"
+                            },
+                            {
+                                "text": "MergeManyValues",
+                                "className": "weka.filters.unsupervised.attribute.MergeManyValues"
+                            },
+                            {
+                                "text": "MergeTwoValues",
+                                "className": "weka.filters.unsupervised.attribute.MergeTwoValues"
+                            },
+                            {
+                                "text": "NominalToBinary",
+                                "className": "weka.filters.unsupervised.attribute.NominalToBinary"
+                            },
+                            {
+                                "text": "NominalToString",
+                                "className": "weka.filters.unsupervised.attribute.NominalToString"
+                            },
+                            {
+                                "text": "NumericCleaner",
+                                "className": "weka.filters.unsupervised.attribute.NumericCleaner"
+                            },
+                            {
+                                "text": "NumericToNominal",
+                                "className": "weka.filters.unsupervised.attribute.NumericToNominal"
+                            },
+                            {
+                                "text": "NumericTransform",
+                                "className": "weka.filters.unsupervised.attribute.NumericTransform"
+                            },
+                            {
+                                "text": "Obfuscate",
+                                "className": "weka.filters.unsupervised.attribute.Obfuscate"
+                            },
+                            {
+                                "text": "PartitionedMultiFilter",
+                                "className": "weka.filters.unsupervised.attribute.PartitionedMultiFilter"
+                            },
+                            {
+                                "text": "PKIDiscretize",
+                                "className": "weka.filters.unsupervised.attribute.PKIDiscretize"
+                            },
+                            {
+                                "text": "PrincipalComponents",
+                                "className": "weka.filters.unsupervised.attribute.PrincipalComponents"
+                            },
+                            {
+                                "text": "RandomProjection",
+                                "className": "weka.filters.unsupervised.attribute.RandomProjection"
+                            },
+                            {
+                                "text": "RandomSubset",
+                                "className": "weka.filters.unsupervised.attribute.RandomSubset"
+                            },
+                            {
+                                "text": "Remove",
+                                "className": "weka.filters.unsupervised.attribute.Remove"
+                            },
+                            {
+                                "text": "RemoveByName",
+                                "className": "weka.filters.unsupervised.attribute.RemoveByName"
+                            },
+                            {
+                                "text": "RemoveType",
+                                "className": "weka.filters.unsupervised.attribute.RemoveType"
+                            },
+                            {
+                                "text": "RemoveUseless",
+                                "className": "weka.filters.unsupervised.attribute.RemoveUseless"
+                            },
+                            {
+                                "text": "RenameAttribute",
+                                "className": "weka.filters.unsupervised.attribute.RenameAttribute"
+                            },
+                            {
+                                "text": "RenameNominalValues",
+                                "className": "weka.filters.unsupervised.attribute.RenameNominalValues"
+                            },
+                            {
+                                "text": "Reorder",
+                                "className": "weka.filters.unsupervised.attribute.Reorder"
+                            },
+                            {
+                                "text": "SortLabels",
+                                "className": "weka.filters.unsupervised.attribute.SortLabels"
+                            },
+                            {
+                                "text": "StringToNominal",
+                                "className": "weka.filters.unsupervised.attribute.StringToNominal"
+                            },
+                            {
+                                "text": "StringToWordVector",
+                                "className": "weka.filters.unsupervised.attribute.StringToWordVector"
+                            },
+                            {
+                                "text": "SwapValues",
+                                "className": "weka.filters.unsupervised.attribute.SwapValues"
+                            },
+                            {
+                                "text": "TimeSeriesDelta",
+                                "className": "weka.filters.unsupervised.attribute.TimeSeriesDelta"
+                            },
+                            {
+                                "text": "Transpose",
+                                "className": "weka.filters.unsupervised.attribute.Transpose"
+                            }
+                        ]
+                    },
+                    {
+                        "subCategoria": "true",
+                        "text": "Instance",
+                        "selectable": false,
+                        "nodes": [
+                            {
+                                "text": "NonSparseToSparse",
+                                "className": "weka.filters.unsupervised.instance.NonSparseToSparse"
+                            },
+                            {
+                                "text": "Randomize",
+                                "className": "weka.filters.unsupervised.instance.Randomize"
+                            },
+                            {
+                                "text": "RemoveDuplicates",
+                                "className": "weka.filters.unsupervised.instance.RemoveDuplicates"
+                            },
+                            {
+                                "text": "RemoveFolds",
+                                "className": "weka.filters.unsupervised.instance.RemoveFolds"
+                            },
+                            {
+                                "text": "RemoveFrequentValues",
+                                "className": "weka.filters.unsupervised.instance.RemoveFrequentValues"
+                            },
+                            {
+                                "text": "RemoveMisclassified",
+                                "className": "weka.filters.unsupervised.instance.RemoveMisclassified"
+                            },
+                            {
+                                "text": "RemovePercentage",
+                                "className": "weka.filters.unsupervised.instance.RemovePercentage"
+                            },
+                            {
+                                "text": "RemoveRange",
+                                "className": "weka.filters.unsupervised.instance.RemoveRange"
+                            },
+                            {
+                                "text": "RemoveWithValues",
+                                "className": "weka.filters.unsupervised.instance.RemoveWithValues"
+                            },
+                            {
+                                "text": "Resample",
+                                "className": "weka.filters.unsupervised.instance.Resample"
+                            },
+                            {
+                                "text": "ReservoirSample",
+                                "className": "weka.filters.unsupervised.instance.ReservoirSample"
+                            },
+                            {
+                                "text": "SparseToNonSparse",
+                                "className": "weka.filters.unsupervised.instance.SparseToNonSparse"
+                            },
+                            {
+                                "text": "SubsetByExpression",
+                                "className": "weka.filters.unsupervised.instance.SubsetByExpression"
+                            }
+                        ]
+                    }
+                ]            
+            }
+        ]
+    }
+]
+

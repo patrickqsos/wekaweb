@@ -520,7 +520,7 @@ public class Dataset extends HttpServlet {
 	                JSONParser parserFilter = new JSONParser();
 					try {
 						JSONArray treeData = (JSONArray) parserFilter.parse(treeFilters);
-						
+						//System.out.println("tree recibido: "+treeData.toString());
 						Iterator itData = treeData.iterator();
 						
 						while(itData.hasNext()){
@@ -540,34 +540,75 @@ public class Dataset extends HttpServlet {
 									Iterator itNodesAlg = nodesAlg.iterator();
 									while(itNodesAlg.hasNext()){
 										JSONObject algoritmoSub = (JSONObject) itNodesAlg.next();
-										//System.out.println("\n\n Evaluating: "+algoritmoSub.get("className")+" --> ");
-										Object fullAlgoritmo = Class.forName((String) algoritmoSub.get("className")).newInstance();
-										BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
-									      MethodDescriptor[] methods = bi.getMethodDescriptors();
-									      for (MethodDescriptor method : methods) {
-									        String name = method.getDisplayName();
-									        Method meth = method.getMethod();
-									        if (name.equals("getCapabilities")) {
-									          if (meth.getReturnType().equals(Capabilities.class)) {
-									            Object args[] = {};
-									            Capabilities cap = Capabilities.forInstances(dataCapAttr);
-												Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+										if(algoritmoSub.containsKey("subCategoria")){
+											JSONArray nodesAlgSub = (JSONArray) algoritmoSub.get("nodes");
+											Iterator itNodesAlgSub = nodesAlgSub.iterator();
+											while(itNodesAlgSub.hasNext()){
+												JSONObject algoritmoSubSub = (JSONObject) itNodesAlgSub.next();
+												System.out.print("Evaluating (deep): "+algoritmoSubSub.get("className")+" --> ");
 												
-												if(capab.supports(cap)){
-												
+												if(algoritmoSubSub.get("className") == "weka.filters.unsupervised.attribute.Center"){
+													System.out.println("dasda");
 												}
-												else{
-													algoritmoSub.put("disabled", true);
-													algoritmoSub.put("selectable", false);
-												}
-												break;
-									          }
-									        }
-									      }
+												Object fullAlgoritmo = Class.forName((String) algoritmoSubSub.get("className")).newInstance();
+												BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+											      MethodDescriptor[] methods = bi.getMethodDescriptors();
+											      for (MethodDescriptor method : methods) {
+											        String name = method.getDisplayName();
+											        Method meth = method.getMethod();
+											        if (name.equals("getCapabilities")) {
+											          if (meth.getReturnType().equals(Capabilities.class)) {
+											            Object args[] = {};
+											            Capabilities cap = Capabilities.forInstances(dataCapAttr);
+														Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+														
+														if(capab.supports(cap)){
+															System.out.println(" soporta");
+														}
+														else{
+															System.out.println(" no soporta");
+															algoritmoSubSub.put("disabled", true);
+															algoritmoSubSub.put("selectable", false);
+														}
+														break;
+											          }
+											        }
+											      }
+											}
+										}
+										else{
+											System.out.print("Evaluating: "+algoritmoSub.get("className")+" --> ");
+											Object fullAlgoritmo = Class.forName((String) algoritmoSub.get("className")).newInstance();
+											BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
+										      MethodDescriptor[] methods = bi.getMethodDescriptors();
+										      for (MethodDescriptor method : methods) {
+										        String name = method.getDisplayName();
+										        Method meth = method.getMethod();
+										        if (name.equals("getCapabilities")) {
+										          if (meth.getReturnType().equals(Capabilities.class)) {
+										            Object args[] = {};
+										            Capabilities cap = Capabilities.forInstances(dataCapAttr);
+													Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
+													
+													if(capab.supports(cap)){
+														System.out.println(" soporta");
+														
+													}
+													else{
+														System.out.println(" no soporta");
+														
+														algoritmoSub.put("disabled", true);
+														algoritmoSub.put("selectable", false);
+													}
+													break;
+										          }
+										        }
+										      }
+										}
 									}
 								}
 								else{
-									//System.out.print("evaluating: "+algoritmo.get("className"));
+									System.out.println("evaluating n/s: "+algoritmo.get("className"));
 									
 									Object fullAlgoritmo = Class.forName((String) algoritmo.get("className")).newInstance();
 									BeanInfo bi = Introspector.getBeanInfo(fullAlgoritmo.getClass());
@@ -580,7 +621,6 @@ public class Dataset extends HttpServlet {
 								            Object args[] = {};
 								            Capabilities cap = Capabilities.forInstances(dataCapAttr);
 											Capabilities capab = (Capabilities) (meth.invoke(fullAlgoritmo, args));
-											//response.getWriter().print("Algoritmo: "+algoritmo.get("className"));
 											
 											if(capab.supports(cap)){
 												//System.out.println(" soporta");
@@ -611,9 +651,8 @@ public class Dataset extends HttpServlet {
 							atributos.add(attr);
 						}
 						//treeData.add(treeAttr);
-						
 						JSONObject trees = new JSONObject();
-						trees.put("treeAlgoritmos", treeData);
+						trees.put("treeFilters", treeData);
 						trees.put("treeAttr", atributos);
 						
 						

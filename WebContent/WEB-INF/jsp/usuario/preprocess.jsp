@@ -28,6 +28,7 @@
 	<script src="js/bootstrap-treeview.js"></script>
     <script src="js/wekaweb/preprocess.js"></script>
     
+
     <script type="text/javascript" >
     	function getTreeDatasets(){
 	   		var tree = [{
@@ -45,25 +46,9 @@
 		    return tree;
 		}
     	
-    	function getTreeAtributos(){
-	   		var tree = [
-	   		            	{
-	    	            		text: "Atributo 1", 
-		    	           	},
-		    	           	{
-			    	            text: "Atributo 2", 
-			    	        },
-			    	        {
-			    	        	text: "Atributo 3"
-			    	        },
-			    	        {
-			    	        	text: "Atributo 4"
-			    	        },
-			    	        {
-			    	        	text: "Atributo 5"
-			    	        }
-
-	   			];
+    	function getTreeFilters(){
+    	    var filters = ${sessionScope.filterTree};
+    	 	var tree = JSON.stringify(filters);
 		    return tree;
 		}
     </script>
@@ -184,10 +169,11 @@
 				
 				<h3>Filtros:</h3>
 				
-				<div id="treeAlgoritmos"></div>
+				<div id="treeFilters"></div>
         		  
         		<input id="inputDataset" type="hidden">  
         		<input id="inputAttribute" type="hidden" value="false">  
+        		<input id="inputFilter" type="hidden">  
         		
         		<div class="form-group">
  		       		<button id="btnApply" data-loading-text="Trabajando..." type="button" class="btn btn-success btn-block">Apply</button>
@@ -259,6 +245,11 @@
 				  </div>
 			  </div>
 			  
+			  <div class="panel panel-primary hidden-print">
+				  <div class="panel-heading">Info del algoritmo: </div>
+				  <div id="pnlInfoAlgoritmo" class="panel-body"></div>
+			  </div>
+			  
 			  <div class="panel-body">
 						     <div id="pnlInstancesbackup" class="table-responsive">
                                 <table class="table table-striped table-condensed table-hover" id="dataInstances"></table>
@@ -285,5 +276,16 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-56254058-1', 'auto');
+	  ga('send', 'pageview');
+	
+	</script>
+
    </body>
 </html>

@@ -1,9 +1,12 @@
 package com.wekaweb.usuario;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 /*
@@ -116,6 +120,16 @@ public class Main extends HttpServlet {
 			
 			case "preprocess":
 				if(loadDatasets(request,response)){
+					String filePath = getServletConfig().getServletContext().getRealPath("WEB-INF") + "/scripts/filters.json";
+	                JSONArray filterTree = new JSONArray();
+					try {
+						filterTree = (JSONArray)  new JSONParser().parse(new FileReader(filePath));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					 request.getSession().setAttribute("filterTree", filterTree);
+					//System.out.println(filterTree.toString());
 					  dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/preprocess.jsp"); 
 					  dispatcher.forward(request,response);
 				}

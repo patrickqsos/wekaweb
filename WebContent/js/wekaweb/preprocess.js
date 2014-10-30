@@ -5,7 +5,7 @@
 function getTreeAlgoritmos() {
    		var tree = [
     	            {
-    	            text: "Classifiers", 
+    	            "text": "Classifiers", 
     	            selectable: false,
     	            nodes: [
     	            	{
@@ -14,7 +14,7 @@ function getTreeAlgoritmos() {
     	               	  selectable: false,
       	                  nodes: [
     	                    {
-    	                      text: "BayesNet",
+    	                      "text": "BayesNet",
     	                      className: "weka.classifiers.bayes.BayesNet",
     	                    	//className: "weka.clusterers.Cobweb",
     	                    },
@@ -303,22 +303,22 @@ function getTreeAlgoritmos() {
 		$('#msgBox').hide();
 		$('#msgGenerated').hide();
 		
-		$('#treeAlgoritmos').treeview({data: getTreeAlgoritmos(),levels:1,showTags: true});
+		$('#treeFilters').treeview({data: getTreeFilters(),levels:1,showTags: true});
 		
 		//$('#treeAtributos').treeview({data: getTreeAtributos(),levels:2,showTags: true});
 		
 		$('#treeDatasets').treeview({data: getTreeDatasets(),levels:2,showTags: true});
 		
-		$('#treeAlgoritmos').on('nodeSelected', function(event, node) {
+		$('#treeFilters').on('nodeSelected', function(event, node) {
 		    
-			var algoritmo = node.className;
-		    $('#inputAlgoritmo').val(algoritmo);
+			var filter = node.className;
+		    $('#inputFilter').val(filter);
 		    $.ajax({
            		type: 'post',
            		url: 'Dataset',
            		data: {
            			action: 'getFullInfoAlgoritmo',
-           			algoritmo: algoritmo,
+           			algoritmo: filter,
            		},
            		beforeSend: function(){
            			//vaciamos el div que contiene el resumen del dataset
@@ -403,15 +403,9 @@ function getTreeAlgoritmos() {
 		
 		$('#treeDatasets').on('nodeSelected', function(event, node) {
 		    
-			var algoritmos = [];
-			var tree = getTreeAlgoritmos();
-			var div = $('#treeAlgoritmos');
-			var aux = $("#treeAlgoritmos").data("plugin_treeview");
-			$.each(aux.nodes, function addNodes(id, node) {
-				if(node.className != undefined)
-					algoritmos.push(node.className);
-			});
-
+			var tree = getTreeFilters();
+			var div = $('#treeFilters');
+			
 			var dataset = node.dataset;
 		    $('#inputDataset').val(dataset);
 		    $.ajax({
@@ -421,16 +415,11 @@ function getTreeAlgoritmos() {
            		data: {
            			action: 'getCapAttr',
            			dataset: dataset,
-           			algoritmos: algoritmos,
-           			tree: JSON.stringify(tree),
-           		},
+           			tree: tree,
+               	},
            		beforeSend: function(){
            			//vaciamos el div que contiene el resumen del dataset
-           	 		//$('#pnlInfoDataset').empty();
-           	 		//$('#pnlData').empty();
-       				//$('#pnlInfoDataset').append("<img src='images/loading2.gif' class='img-responsive center-block'/>");
-           			
-           			$('#checkboxesAttr').empty();
+           	 		$('#checkboxesAttr').empty();
            	    },
            	 	success: function(data){
            	 	 	for(var i=0;i<data.treeAttr.length;i++){
@@ -441,7 +430,7 @@ function getTreeAlgoritmos() {
            	 			$('#checkboxesAttr').append(checkbox);
        	 			}
            	 		$('#treeAtributos').treeview({data: data.treeAttr,levels:1,showTags: true,selectedBackColor:"#80899B"});
-    				$('#treeAlgoritmos').treeview({data: data.treeAlgoritmos,levels:2,showTags: true});
+    				$('#treeFilters').treeview({data: data.treeFilters,levels:2,showTags: true});
 	    			
     				$('#btnImprimir').prop('disabled', true);
 					$('#btnImportar').prop('disabled', true);
@@ -581,9 +570,9 @@ function getTreeAlgoritmos() {
 			}
 		});
 		
-		$('#btnStart').click(function () {
+		$('#btnApply').click(function () {
 			var dataset = $('#inputDataset').val();
-			var algoritmo = $('#inputAlgoritmo').val();
+			var filter = $('#inputFilter').val();
 			
 			$(this).button('loading');
 			
