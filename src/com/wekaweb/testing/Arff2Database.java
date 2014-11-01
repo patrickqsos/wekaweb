@@ -1,6 +1,10 @@
 package com.wekaweb.testing;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import weka.core.Capabilities;
+import weka.core.Instances;
 import weka.filters.unsupervised.attribute.Standardize;
 
 /**
@@ -27,7 +31,12 @@ public class Arff2Database {
 	  
 	  System.out.println(cap.toString());
       
+	  BufferedReader br = new BufferedReader(new FileReader("/Users/Patrick/weather.arff"));
+	  //File file = new File("E:\\Environment\\weather.json");
 	  
+      Instances data = new Instances(br);
+	 
+      
 	 /* 
 	  
 	  BufferedReader br = new BufferedReader(new FileReader("/Users/Patrick/weather.arff"));

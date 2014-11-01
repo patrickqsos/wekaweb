@@ -84,6 +84,7 @@ import weka.datagenerators.classifiers.regression.Expression;
 import weka.datagenerators.classifiers.regression.MexicanHat;
 import weka.datagenerators.clusterers.BIRCHCluster;
 import weka.datagenerators.clusterers.SubspaceCluster;
+import weka.filters.Filter;
 import weka.gui.PropertySheetPanel;
 import weka.gui.explorer.DataGeneratorPanel;
 
@@ -874,6 +875,7 @@ public class Dataset extends HttpServlet {
 					  outInfo.println(resultInfo);
 					  outInfo.flush();
 					break;
+					
 				case "updateClassIndex":
 					
 					String datase = (String) session.getAttribute("nombreTabla");
@@ -1184,19 +1186,11 @@ public class Dataset extends HttpServlet {
 					for(String atributo:attrRemove){
 						
 						dataAttrFilter.deleteAttributeAt(dataAttrFilter.attribute(atributo).index());
-						/*
-						System.out.println(atributo+ " " + dataAttrFilter.attribute(atributo).index());
-						AttributeStats stats = dataAttrFilter.attributeStats(dataAttrFilter.attribute(atributo).index());
-						System.out.println("missing "+stats.missingCount);
-						System.out.println("distinct "+stats.distinctCount);
-						System.out.println("unique "+stats.uniqueCount);
-						*/
 					}
 					
 					updateDataset(dataAttrFilter, response.getWriter(), (String) session.getAttribute("nombreTabla"));
-					
-					//response.getWriter().println(dataAttrFilter.numAttributes());
-					break;   
+					session.setAttribute("dataAttrFilter", dataAttrFilter);
+			        break;   
 				case "importGenerated":
 					PrintWriter outImport = response.getWriter();
 		    		
@@ -1278,6 +1272,36 @@ public class Dataset extends HttpServlet {
 					//printer.print(dataToUpdate.toString());
 					printer.flush();
 					break;
+					
+				case "filter":
+					//String datasetCluster = request.getParameter("dataset");
+					Instances dataFilter = (Instances) session.getAttribute("dataAttrFilter");
+					String filter = request.getParameter("filter");
+	
+					try {
+						Object filterAlgoritmo = Class.forName(filter).newInstance();
+						BeanInfo bi = Introspector.getBeanInfo(filterAlgoritmo.getClass());
+					      MethodDescriptor[] methods = bi.getMethodDescriptors();
+					      for (MethodDescriptor method : methods) {
+					        String name = method.getDisplayName();
+					        Method meth = method.getMethod();
+					        if (name.equals("setInputFormat")) {
+					        	
+					        	meth.invoke(filterAlgoritmo, dataFilter);
+					        	Instances newData = Filter.useFilter(dataFilter, (Filter) filterAlgoritmo);
+					        	
+					        	response.getWriter().println("El filtro se aplico corrrectamente");
+					        	//System.out.println(newData.numAttributes());
+					        }
+					      }
+					} catch (Exception e2) {
+						e2.printStackTrace();
+						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						response.getWriter().println(e2.getMessage());
+					}
+					
+					break;
+				
 				case "clustering":
 					
 					String datasetCluster = request.getParameter("dataset");

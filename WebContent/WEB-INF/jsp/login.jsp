@@ -21,6 +21,8 @@
 	<link href="css/bootstrap/bootstrap-social.css" rel="stylesheet">
 	<link href="css/bootstrap/font-awesome.css" rel="stylesheet">
 
+	<script src="js/jquery-1.9.1.js"></script>
+    <script src="js/wekaweb/login.js"></script>
     
     
   </head>
@@ -94,7 +96,7 @@
     						<div class="col-sm-12">
     							<input class="btn btn-lg btn-block btn-success" id="btnLogin" name="submit" type="submit" value="Iniciar sesion">
     							<p class="help-block famigo-help-block">¿No tienes una cuenta? <a href="<%=request.getContextPath()%>/Registro">Registrarse.</a></p>
-    							<p class="help-block famigo-help-block">O inicia sesion con: <a class="btn btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a>&nbsp;<a class="btn btn-social-icon btn-google-plus"><i class="fa fa-google-plus"></i></a>&nbsp;<a class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></a></p>
+    							<p class="help-block famigo-help-block">O inicia sesion con: <a id="fbLogin" href="<%=request.getContextPath()%>/Login?type=facebook" class="btn btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a>&nbsp;<a id="googleLogin" href="<%=request.getContextPath()%>/Login?type=google" class="btn btn-social-icon btn-google-plus"><i class="fa fa-google-plus"></i></a>&nbsp;<a href="<%=request.getContextPath()%>/Login?type=twitter" id="twitterLogin" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></a></p>
     							<p class="help-block famigo-help-block"><a href="/login/forgot/">Olvide mi password</a></p>
     						</div>
     					</div>

@@ -58,18 +58,18 @@
        
       <div class="row">
         <div class="col-md-4">
-          <h2>Cloud Computing</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
           <h2>Mineria de datos</h2>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
+       	</div>
+       	<div class="col-md-4">
           <h2>Weka</h2>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Cloud Computing</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
         </div>
       </div>
@@ -78,13 +78,25 @@
 
       
     </div> <!-- /container -->
-
+<!-- 
 	<div class="footer">
       <div class="container">
-        <p>Copyright © 2014 <a href="#">Patricio Quispe Sosa</a></p>
-      </div>
+        <p class="navbar-text pull-left">Copyright © 2014 <a href="#">Patricio Quispe Sosa</a></p>
+      	<p class="navbar-text pull-right"><a href="http://aws.amazon.com/what-is-cloud-computing"><img src="http://awsmedia.s3.amazonaws.com/AWS_Logo_PoweredBy_127px.png" alt="Powered by AWS Cloud Computing"></a></p>
+     </div>
     </div>
-
+-->
+  
+	<div class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+      <p class="navbar-text pull-left">Copyright © 2014 <a href="#">Patricio Quispe Sosa</a></p>
+      <p class="navbar-text pull-right"><a href="http://aws.amazon.com/what-is-cloud-computing"><img src="http://awsmedia.s3.amazonaws.com/AWS_Logo_PoweredBy_127px.png" alt="Powered by AWS Cloud Computing"></a></p>
+         
+    </div>
+    
+    
+  </div>
+  
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

@@ -178,6 +178,7 @@
         		<div class="form-group">
  		       		<button id="btnApply" data-loading-text="Trabajando..." type="button" class="btn btn-success btn-block">Apply</button>
 				</div>
+				<!--  
 				<div class="form-group">
  				  	<div class="btn-group btn-group-justified">
 					  <div class="btn-group">
@@ -193,7 +194,6 @@
 					    <button id="btnImportar" data-loading-text="Importando..." type="button" class="btn btn-default" disabled="disabled"><span class="glyphicon glyphicon-upload"></span> Importar</button>
 					  </div>
 					  
-					  <!--  
 					  <div class="btn-group">
 					    <button id="btnExportar" data-loading-text="Exportando..."  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled="disabled"><span class="glyphicon glyphicon-download"></span> Exportar  <span class="caret"></span></button>
 					    <ul class="dropdown-menu" role="menu">
@@ -210,13 +210,16 @@
 					          <li><a class="typeFile" id="xrff.gz" href="#">XRFF data files (*.xrff.gz)</a></li>
 					    </ul>
 					  </div>
-					  -->
+					  
 					</div>
 				</div>
+				-->
 				<div class="form-group">
- 					<div class="alert alert-dismissible alert-danger" role="alert" id="msgGenerated">
-						<button id="btnClose" type="button" class="close" onclick="$('.alert').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="messageGen">message</span>
-					</div>
+ 					
+ 				<div class="alert alert-dismissible alert-danger" role="alert" id="msgGenerated">
+					<button id="btnClose" type="button" class="close" onclick="$('.alert').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><span id="messageGen">message</span>
+				</div>
+				
 				</div>
 			</div>
 	        
