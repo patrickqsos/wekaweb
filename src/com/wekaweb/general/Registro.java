@@ -97,7 +97,7 @@ public class Registro extends HttpServlet {
     		                	usuarioDB.setTipo(rs.getString("tipo"));
     		                	
     		                	HttpSession session = request.getSession();
-    	                        session.setAttribute("usuarior", usuarioDB);
+    	                        session.setAttribute("usuario", usuarioDB);
     	                        session.setAttribute("msgActivate", "Tu cuenta ha sido activada, ahora puedes hacer uso de todas las funciones ofrecidas por Weka Web Application");
     	                        //setting session to expiry in 30 mins
     	                        session.setMaxInactiveInterval(30*60);
@@ -112,13 +112,15 @@ public class Registro extends HttpServlet {
 	                	}
 	                	else{
 	                		System.out.println("token corrupto");
+	                		String msgError = "";
 	                		dispatcher = request.getRequestDispatcher("/error.jsp"); 
 	        				dispatcher.forward(request,response);
 	                	}
 	                }
 	                else{
 	                	System.out.println("email no encontrado");
-	                	dispatcher = request.getRequestDispatcher("/error.jsp"); 
+	                	String msgError = "Email no encontrado";
+                		dispatcher = request.getRequestDispatcher("/error.jsp"); 
         				dispatcher.forward(request,response);
 		                	
 		            }
@@ -169,11 +171,9 @@ public class Registro extends HttpServlet {
             
             	//se valida que el email no este registrado
             	ConnectDB con = new ConnectDB ();
-            	ResultSet rs = null;
             	
             	String mycad = "select * from usuario where email='"+email+"'";
                 
-				String cad = "select COUNT(*) as total from usuario where email='"+email+"'";
 				if(!con.exists(mycad)){
 					//se valida que los campos no esten vacios
                 	if(nombre.isEmpty() || apellido.isEmpty() || email.isEmpty() || password.isEmpty())
@@ -185,7 +185,7 @@ public class Registro extends HttpServlet {
                 	
                 	if(validate){
                 		//se genera un token de validacion
-                    	token = getCadenaAlfanumAleatoria(30);
+                    	token = getToken(30);
                     	
                 		int rsConsulta = 0;
                         String cadena= "insert into usuario values(null,'"+nombre+"','"+apellido+"','"+email+"','"+password+"','"+token+"','0','usuario')";
@@ -201,44 +201,38 @@ public class Registro extends HttpServlet {
                 			//dispatcher.forward(request,response);
             			}
                         else{
-                        	String vcapEnv = System.getenv("VCAP_SERVICES");  
-                    	    String flag = "";
                         	String urlInit = "";
-                        	if (vcapEnv == null) {  
-                        		urlInit = "http://localhost:8080"+request.getContextPath();
-                        		flag = "local";
-                    	    }
-                    	    else{
-                    	    	urlInit = "http://wekaweb.aws.af.cm";
-                    	    	flag = "cloud";
-                    	    }
-                        	//out.println("Verifica tu correo");
-                        	//dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/indexUsuarioRegistrado.jsp"); 
-                			//dispatcher.forward(request,response);
-                        	try{
+                        	String url = request.getSession().getServletContext().getInitParameter("url");
+                			String debugContext = request.getSession().getServletContext().getInitParameter("debug");
+                			String adminEmail = request.getSession().getServletContext().getInitParameter("adminEmail");
+                			String passEmail = request.getSession().getServletContext().getInitParameter("passEmail");
+                			
+                			
+                			if(Boolean.parseBoolean(debugContext)){
+                				urlInit = "http://localhost:8080"+request.getContextPath();
+                        	}
+                			else{
+                				urlInit = url;
+                        	}
+                				
+                			try{
                          	   // Propiedades de la conexión
                          	   Properties props = new Properties();
                          	   props.setProperty("mail.smtp.host", "smtp.gmail.com");
                          	   props.setProperty("mail.smtp.starttls.enable", "true");
                          	   props.setProperty("mail.smtp.port", "587");
-                         	   props.setProperty("mail.smtp.user", "contact.wekaweb@gmail.com");
+                         	   props.setProperty("mail.smtp.user", adminEmail);
                          	   props.setProperty("mail.smtp.auth", "true");
                          	 
                          	   // Preparamos la sesion
                          	   Session session = Session.getDefaultInstance(props);
                          	   // Construimos el mensaje
                          	   MimeMessage message = new MimeMessage(session);
-                         	   //la persona k tiene k verificar
-                         	   message.setFrom(new InternetAddress("contact.wekaweb@gmail.com"));
+                         	    message.setFrom(new InternetAddress(adminEmail));
                          	   message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
-                         	   message.addHeader("Disposition-Notification-To","contact.wekaweb@gmail.com");
+                         	   message.addHeader("Disposition-Notification-To",adminEmail);
                          	   message.setSubject("Correo de verificacion, porfavor no responder");
-                         	   
-                         	   String msg = buildTemplate(urlInit, email, token);
-                         	   
-                         	   String mymsg = test();
-                         	  message.setText(msg,"ISO-8859-1",
-                        	           "html");
+                         	   message.setText(buildTemplate(urlInit, email, token),"ISO-8859-1","html");
                                		
                          	   /*
                          	   message.setText(
@@ -256,7 +250,7 @@ public class Registro extends HttpServlet {
                          	   */
                          	   // Lo enviamos.
                          	   Transport t = session.getTransport("smtp");
-                         	   t.connect("contact.wekaweb@gmail.com", "eemNC300");
+                         	   t.connect(adminEmail, passEmail);
                          	   t.sendMessage(message, message.getAllRecipients());
                          	   // Cierre.
                          	   t.close();
@@ -307,7 +301,7 @@ public class Registro extends HttpServlet {
 		
 	}
 	
-	public  String getCadenaAlfanumAleatoria (int longitud){
+	public  String getToken (int longitud){
 		String cadenaAleatoria="";
 		long milis = new java.util.GregorianCalendar().getTimeInMillis();
 		Random r = new Random(milis);

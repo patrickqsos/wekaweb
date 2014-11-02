@@ -129,7 +129,7 @@
     							<label for="inputEmail">Email</label>
     						</div>
     						<div class="col-sm-8">
-    							<input value="dadelos-38@hotmail.com" class="form-control" id="inputEmail" name="inputEmail" type="email" required>
+    							<input class="form-control" id="inputEmail" name="inputEmail" type="email" required>
     							<div class="help-block with-errors"></div>
     						</div>
     					</div>

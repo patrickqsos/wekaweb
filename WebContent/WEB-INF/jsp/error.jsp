@@ -57,10 +57,10 @@
 		    <div class="span12">
 		      <div class="jumbotron text-center">
 		          <h1>Pagina no encontrada</h1>
-		          <h1><small><font face="Tahoma" color="red">Errodr 404</font></small></h1>
+		          <h1><small><font face="Tahoma" color="red">Error 404</font></small></h1>
 		          <br />
 		          <p>La pagina que solicitaste no fue encontrada,contacte al administrador o recargue la pagina. Use el boton <b>Atras</b> para volver a la pagina de donde vino</p>
-		          <p><b>O puede presionar le siguiente boton:</b></p>
+		          <p><b>O puede presionar el siguiente boton:</b></p>
 		          <a href="<%=request.getContextPath()%>" class="btn btn-large btn-info"><i class="icon-home icon-white"></i>Pagina de inicio</a>
 		        </div>
 		        <br />

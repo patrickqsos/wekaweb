@@ -78,8 +78,8 @@ public class Main extends HttpServlet {
     		
     		switch (opcion) {
     		case "index":
-    			String debugContext = request.getSession().getServletContext().getInitParameter("debug");
-    			System.out.println("debug :"+debugContext);
+    			//String debugContext = request.getSession().getServletContext().getInitParameter("debug");
+    			//System.out.println("debug :"+debugContext);
     			
     			dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/usuario/indexUsuario.jsp"); 
 				dispatcher.forward(request,response);

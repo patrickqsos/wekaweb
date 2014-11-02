@@ -79,7 +79,7 @@
     							<label for="inputEmail">Email</label>
     						</div>
     						<div class="col-sm-8">
-    							<input class="form-control" id="inputEmail" name="inputEmail"  placeholder="alguien@ejemplo.com" value="ur1@localhost.com" type="email" required>
+    							<input class="form-control" id="inputEmail" name="inputEmail"  placeholder="alguien@ejemplo.com" type="email" required>
     							<div class="help-block with-errors"></div>
     						</div>
     					</div>
@@ -88,7 +88,7 @@
     							<label for="inputPassword">Password</label>
     						</div>
     						<div class="col-sm-8">
-    							<input class="form-control" id="inputPassword" name="inputPassword" placeholder="password" value="ur1" type="password" required>
+    							<input class="form-control" id="inputPassword" name="inputPassword" placeholder="password" type="password" required>
     							<div class="help-block with-errors"></div>
     						</div>
     					</div> 
@@ -97,7 +97,7 @@
     							<input class="btn btn-lg btn-block btn-success" id="btnLogin" name="submit" type="submit" value="Iniciar sesion">
     							<p class="help-block famigo-help-block">¿No tienes una cuenta? <a href="<%=request.getContextPath()%>/Registro">Registrarse.</a></p>
     							<p class="help-block famigo-help-block">O inicia sesion con: <a id="fbLogin" href="<%=request.getContextPath()%>/Login?type=facebook" class="btn btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a>&nbsp;<a id="googleLogin" href="<%=request.getContextPath()%>/Login?type=google" class="btn btn-social-icon btn-google-plus"><i class="fa fa-google-plus"></i></a>&nbsp;<a href="<%=request.getContextPath()%>/Login?type=twitter" id="twitterLogin" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></a></p>
-    							<p class="help-block famigo-help-block"><a href="/login/forgot/">Olvide mi password</a></p>
+    							<!-- <p class="help-block famigo-help-block"><a href="/login/forgot/">Olvide mi password</a></p> -->
     						</div>
     					</div>
     				</fieldset>

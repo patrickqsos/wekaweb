@@ -60,22 +60,25 @@
             <li><a href="<%=request.getContextPath()%>/Main?action=clustering">Clustering</a></li>
             <li><a href="<%=request.getContextPath()%>/Main?action=asociacion">Asociacion</a></li>
           </ul>
+          
+          <!--  
           <ul class="nav navbar-nav navbar-right">
             <form class="navbar-form navbar-right" role="form" method="post" action="Logout">
             	<button type="button" class="btn btn-link">Perfil</button>
             	<input type="submit" class="btn btn-danger" name="submit" value="Cerrar sesion" />
           	</form>
           </ul>
-          <!-- 
+          -->
           <ul class="nav navbar-nav navbar-right">
 	        <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><c:out value="${name}"></c:out><span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
+	          	<li><a href="#">Completar registro</a></li>	
 	            <li><a href="#">Logout</a></li>
 	          </ul>
 	        </li>
 	      </ul>
-	       -->
+	     
         </div><!--/.nav-collapse -->
       </div>
     </div>

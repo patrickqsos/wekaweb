@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
 /*
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -152,7 +151,7 @@ public class DatasetAdmin extends HttpServlet {
                     	Rows.add(rsConsulta.getString("nombre"));
                     }
                     
-                    System.out.println("Tamaño: "+Rows.size());
+                    System.out.println("Tamaï¿½o: "+Rows.size());
                 }catch(Exception e){
                 	e.printStackTrace();
                 }finally{
