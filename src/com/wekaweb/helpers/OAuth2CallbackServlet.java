@@ -71,7 +71,6 @@ public class OAuth2CallbackServlet extends HttpServlet {
 	      }
 	      //OK the user have consented so lets find out about the user 
 	      request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
-
 	      AsyncContext ctx = request.startAsync(); 
 	      ctx.start(new GetUserInfo(request, response, ctx)); 
 	      
