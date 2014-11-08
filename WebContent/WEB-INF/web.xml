@@ -18,7 +18,14 @@
     <param-name>url</param-name>
     <param-value>http://wekawebapp.com</param-value>
   </context-param>
-  
+  <context-param>
+    <param-name>adminEmail</param-name>
+    <param-value>admin@wekawebapp.com</param-value>
+  </context-param>
+  <context-param>
+    <param-name>passEmail</param-name>
+    <param-value>delta3.YO</param-value>
+  </context-param>
   <servlet>
     <servlet-name>Login</servlet-name>
     <servlet-class>com.wekaweb.general.Login</servlet-class>
