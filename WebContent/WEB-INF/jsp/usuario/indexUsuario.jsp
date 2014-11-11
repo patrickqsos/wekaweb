@@ -1,10 +1,10 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html">
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -18,12 +18,15 @@
     <!-- Custom styles for this template -->
     <link href="css/bootstrap/sticky-footer-navbar.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link href="css/bootstrap/bootstrap-formhelpers.min.css" rel="stylesheet">
     
     <script src="js/jquery-1.9.1.js"></script>
     <script src="js/docs.min.js"></script>
+	<script src="js/bootstrap-formhelpers.min.js"></script>
+    
   </head>
 
-  <body data-spy="scroll" data-target="#myScrollspy">
+  <body data-spy="scroll" data-target="#docs">
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-inverse " role="navigation">
@@ -74,9 +77,11 @@
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><c:out value="${name}"></c:out><span class="caret"></span></a>
 	          <ul class="dropdown-menu" role="menu">
 	          	<li><a href="#">Completar registro</a></li>	
-	            <li><a href="#">Logout</a></li>
+	            <li><a  class="list-group-item list-group-item-danger" href="<%=request.getContextPath()%>/Logout">Logout</a></li>
 	          </ul>
 	        </li>
+	        <li><div class="bfh-selectbox bfh-languages navbar-btn" data-language="es_ES" data-available="en_US,es_ES" data-flags="true" data-blank="false"></div></li>
+			
 	      </ul>
 	     
         </div><!--/.nav-collapse -->
@@ -99,6 +104,7 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1>Navbar example</h1>
+        <!--  
         <c:choose>
 	    	<c:when test="${empty name}">
 	    	
@@ -110,11 +116,11 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
-		
+		-->
         <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
         <p>To see the difference between static and fixed top navbars, just scroll.</p>
         <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
+          <a class="btn btn-lg btn-primary" href="#cntDatasets" role="button">View navbar docs &raquo;</a>
         </p>
       </div>
 	</div> <!-- /container -->
@@ -122,7 +128,7 @@
 	<div class="container">
       <!-- Example row of columns -->
       <div id="af" class="row">
-        <div  class="col-md-3" id="myScrollspy">
+        <div  class="col-md-3" id="docs">
           <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" role="complementary">
             <ul id="af" class="nav bs-docs-sidenav">
 				<li>
