@@ -11,7 +11,7 @@
     <meta name="author" content="Patricio Quispe Sosa">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>WWA - Weka Web Application</title>
+    <title>Weka Web Application</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -19,6 +19,7 @@
     <!-- Custom styles for this template -->
     <link href="css/bootstrap/jumbotron.css" rel="stylesheet">
 	<link href="css/bootstrap/sticky-footer-navbar.css" rel="stylesheet">
+	<script src="js/jquery-1.9.1.js"></script>
    </head>
 
   <body>

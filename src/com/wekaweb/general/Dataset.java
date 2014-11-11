@@ -1184,13 +1184,18 @@ public class Dataset extends HttpServlet {
 					Instances dataAttrFilter = (Instances) session.getAttribute("dataAttrFilter");
 					
 					for(String atributo:attrRemove){
-						
-						dataAttrFilter.deleteAttributeAt(dataAttrFilter.attribute(atributo).index());
+						try {
+							dataAttrFilter.deleteAttributeAt(dataAttrFilter.attribute(atributo).index());
+							updateDataset(dataAttrFilter, response.getWriter(), (String) session.getAttribute("nombreTabla"));
+							session.setAttribute("dataAttrFilter", dataAttrFilter);
+					        
+						} catch (Exception e) {
+							response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+							response.getWriter().println(e.getMessage());
+						}
 					}
 					
-					updateDataset(dataAttrFilter, response.getWriter(), (String) session.getAttribute("nombreTabla"));
-					session.setAttribute("dataAttrFilter", dataAttrFilter);
-			        break;   
+					break;   
 				case "importGenerated":
 					PrintWriter outImport = response.getWriter();
 		    		
@@ -1289,6 +1294,7 @@ public class Dataset extends HttpServlet {
 					        	
 					        	meth.invoke(filterAlgoritmo, dataFilter);
 					        	Instances newData = Filter.useFilter(dataFilter, (Filter) filterAlgoritmo);
+					        	
 					        	
 					        	response.getWriter().println("El filtro se aplico corrrectamente");
 					        	//System.out.println(newData.numAttributes());
@@ -1533,10 +1539,10 @@ public class Dataset extends HttpServlet {
 	        save.writeBatch();
 	        //String cadena= "insert into usuario_tabla values('"+tmpData.getIdUsuario()+"','"+tmpData.getNombre()+"','"+tmpData.getTabla()+"','"+tmpData.getRelation()+"','"+tmpData.getClassIndex()+"','"+tmpData.getDescripcion()+"','"+tmpData.getOrigen()+"' )";
 	        
-	    	out.print("dataset actualizado");
+	    	out.print("Dataset actualizado");
 	    }
         catch(Exception e){
-        	out.print("hubo un error al actualizar el dataset");
+        	out.print("Hubo un error al actualizar el dataset");
         }finally{
         	out.flush();
         	con.closeConnection();	

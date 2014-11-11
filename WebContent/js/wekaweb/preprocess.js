@@ -281,12 +281,10 @@
 						
 	           	 	},
 	           		error: function(data){
-	           			$('#msgGenerated').removeClass( "alert-success" ).addClass( "alert-danger" );
-						$('#messageGen').text(data.responseText);
-						$('#msgGenerated').show();
-						$('#btnStart').button('reset');
+	           			$('#msgBox').removeClass( "alert-success" ).addClass( "alert-danger" );
+						$('#message').text(data.responseText);
+						$('#msgBox').show();
 						$('#btnRemove').button('reset');
-						
 					}
 	           	});
 			}

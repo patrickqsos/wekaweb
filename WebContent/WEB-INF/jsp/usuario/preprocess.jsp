@@ -27,8 +27,6 @@
     <script src="js/jquery.tmpl.min.js"></script>
 	<script src="js/bootstrap-treeview.js"></script>
     <script src="js/wekaweb/preprocess.js"></script>
-    
-
     <script type="text/javascript" >
     	function getTreeDatasets(){
 	   		var tree = [{
