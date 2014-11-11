@@ -30,66 +30,43 @@
     <servlet-name>Login</servlet-name>
     <servlet-class>com.wekaweb.general.Login</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Login</servlet-name>
-    <url-pattern>/Login</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>Logout</servlet-name>
     <servlet-class>com.wekaweb.general.Logout</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Logout</servlet-name>
-    <url-pattern>/Logout</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>Registro</servlet-name>
     <servlet-class>com.wekaweb.general.Registro</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Registro</servlet-name>
-    <url-pattern>/Registro</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>Administrador</servlet-name>
     <servlet-class>com.wekaweb.administrador.Administrador</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Administrador</servlet-name>
-    <url-pattern>/Administrador</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>Main</servlet-name>
     <servlet-class>com.wekaweb.usuario.Main</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Main</servlet-name>
-    <url-pattern>/Main</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>DatasetAdmin</servlet-name>
     <servlet-class>com.wekaweb.administrador.DatasetAdmin</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>DatasetAdmin</servlet-name>
-    <url-pattern>/DatasetAdmin</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>Dataset</servlet-name>
     <servlet-class>com.wekaweb.general.Dataset</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Dataset</servlet-name>
-    <url-pattern>/Dataset</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <servlet-name>OAuth2CallbackServlet</servlet-name>
     <servlet-class>com.wekaweb.helpers.OAuth2CallbackServlet</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>OAuth2CallbackServlet</servlet-name>
-    <url-pattern>/oauth2callback</url-pattern>
-  </servlet-mapping>
+  
+  
   <filter>
     <filter-name>RequestLoggingFilter</filter-name>
     <filter-class>com.wekaweb.general.RequestLoggingFilter</filter-class>
