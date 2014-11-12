@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Pagina no encontrada - WWA</title>
+    <title>Pagina no encontrada</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -46,7 +46,9 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+            <!--  
             <li><a href="<%=request.getContextPath()%>/Main?action=index">Home</a></li>
+            -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle active" data-toggle="dropdown">Datasets<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
