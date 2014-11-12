@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Pagina de inicio - WWA</title>
+    <title>Pagina de inicio</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +27,8 @@
   </head>
 
   <body data-spy="scroll" data-target="#docs">
-
+	<jsp:useBean id="usuario" class="com.wekaweb.beans.UsuarioBean" scope="session" />
+        
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-inverse " role="navigation">
       <div class="container">
@@ -43,7 +44,9 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+            <!--  
             <li><a href="<%=request.getContextPath()%>/Main?action=index">Home</a></li>
+            -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle active" data-toggle="dropdown">Datasets<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -63,7 +66,29 @@
             <li><a href="<%=request.getContextPath()%>/Main?action=clustering">Clustering</a></li>
             <li><a href="<%=request.getContextPath()%>/Main?action=asociacion">Asociacion</a></li>
           </ul>
-          
+          <c:choose>
+	    	<c:when test="${empty name}">
+	    		<ul class="nav navbar-nav navbar-right">
+		            <form class="navbar-form navbar-right" role="form" method="post" action="Logout">
+		            	<input type="submit" class="btn btn-danger" name="submit" value="Cerrar sesion" />
+		          	</form>
+		          </ul>
+			</c:when>
+			<c:otherwise>
+				  <ul class="nav navbar-nav navbar-right">
+			        <li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><c:out value="${name}"></c:out><span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+			          	<li><a href="#">Completar registro</a></li>	
+			            <li><a  class="list-group-item list-group-item-danger" href="<%=request.getContextPath()%>/Logout">Logout</a></li>
+			          </ul>
+			        </li>
+			        <!-- 
+			        <li><div class="bfh-selectbox bfh-languages navbar-btn" data-language="es_ES" data-available="en_US,es_ES" data-flags="true" data-blank="false"></div></li>
+					 -->
+			      </ul>
+			</c:otherwise>
+		 </c:choose>
           <!--  
           <ul class="nav navbar-nav navbar-right">
             <form class="navbar-form navbar-right" role="form" method="post" action="Logout">
@@ -71,7 +96,7 @@
             	<input type="submit" class="btn btn-danger" name="submit" value="Cerrar sesion" />
           	</form>
           </ul>
-          -->
+          
           <ul class="nav navbar-nav navbar-right">
 	        <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><c:out value="${name}"></c:out><span class="caret"></span></a>
@@ -80,10 +105,11 @@
 	            <li><a  class="list-group-item list-group-item-danger" href="<%=request.getContextPath()%>/Logout">Logout</a></li>
 	          </ul>
 	        </li>
+	         
 	        <li><div class="bfh-selectbox bfh-languages navbar-btn" data-language="es_ES" data-available="en_US,es_ES" data-flags="true" data-blank="false"></div></li>
-			
+			 
 	      </ul>
-	     
+	     -->
         </div><!--/.nav-collapse -->
       </div>
     </div>
@@ -103,7 +129,7 @@
 		</c:choose>
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Navbar example</h1>
+        <h1>Hola <jsp:getProperty property="nombre" name="usuario"/> !</h1>
         <!--  
         <c:choose>
 	    	<c:when test="${empty name}">
@@ -117,10 +143,9 @@
 			</c:otherwise>
 		</c:choose>
 		-->
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
+        <p>Esta es tu pagina de inicio donde encontraras toda la informacion sobre las funcionalidades que te ofrece Weka Web Application, haciendo clic en el siguiente boton podras encontrar mas informacion</p>
         <p>
-          <a class="btn btn-lg btn-primary" href="#cntDatasets" role="button">View navbar docs &raquo;</a>
+          <a class="btn btn-lg btn-primary" href="#cntDatasets" role="button">Ver funcionalidades &raquo;</a>
         </p>
       </div>
 	</div> <!-- /container -->
@@ -150,7 +175,7 @@
 
         <div class="col-md-9">
             <h2 id="cntDatasets">Datasets</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
+            <p>Un dataset es un conjunto de elementos de datos más o menos equivalente a una hoja de cálculo de dos dimensiones o una tabla de base de datos. En WEKA, es implementado por la clase weka.core.Instances. Un dataset es una colección de instancias, cada uno de la clase weka.core.Instance. Cada Instancia consta de un número de atributos, cualquiera de los cuales puede ser nominal (uno de una lista predefinida de valores), numérico (un número real o entero) o una cadena (una larga lista arbitraria de caracteres, encerrada en "comillas dobles"). Otros tipos son fecha y relacional</p>
             <hr>
 
             <h2 id="cntImportar">Importar</h2>

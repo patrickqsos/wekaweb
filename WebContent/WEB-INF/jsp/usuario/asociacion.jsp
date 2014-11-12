@@ -50,7 +50,7 @@
 
 	<jsp:useBean id="usuario" class="com.wekaweb.beans.UsuarioBean" scope="session" />
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -64,7 +64,9 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+            <!--  
             <li><a href="<%=request.getContextPath()%>/Main?action=index">Home</a></li>
+            -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle active" data-toggle="dropdown">Datasets<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">

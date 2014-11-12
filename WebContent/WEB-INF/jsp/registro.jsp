@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Registrarse - WWA</title>
+    <title>Registrarse</title>
 	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
   	<link href="css/bootstrap/jumbotron.css" rel="stylesheet">
 	<script src="js/jquery-1.9.1.js"></script>
