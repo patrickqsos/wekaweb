@@ -6,8 +6,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Interfaz web para la herramienta Weka">
+    <meta name="author" content="Patricio Quispe Sosa">
     <link rel="icon" href="images/favicon.ico">
 
     <title>Clasificacion de datos</title>
@@ -129,6 +129,7 @@
 				</div>
 				
 				<h3>Seleccionar algoritmo:</h3>
+        		<!--  
         		<div class="form-group">
                 
 	        		<div class="input-group">
@@ -138,6 +139,7 @@
 	                    </div>
 	                </div>
 	            </div>
+	            -->
         		<div id="treeAlgoritmos"></div>
         		  
         		<input id="inputDataset" type="hidden">  
