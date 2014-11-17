@@ -137,6 +137,7 @@ public class OAuth2CallbackServlet extends HttpServlet {
 	      userLogged = new UsuarioBean();
 	      switch (oauthType) {
 			case "google":
+				userLogged.setIdSocial(profile.get("id").toString());
 				userLogged.setNombre(profile.get("given_name").toString());
 				userLogged.setApellido(profile.get("family_name").toString());
 				userLogged.setEmail(profile.get("email").toString());
@@ -144,16 +145,18 @@ public class OAuth2CallbackServlet extends HttpServlet {
 				userLogged.setTipo("usuario");
 				break;
 			case "facebook":
+				userLogged.setIdSocial(profile.get("id").toString());
 				userLogged.setNombre(profile.get("first_name").toString());
 				userLogged.setApellido(profile.get("last_name").toString());
-				userLogged.setEmail(profile.get("email").toString());
+				if(profile.get("email") != null) userLogged.setEmail(profile.get("email").toString());
 				userLogged.setActivo(true);
 				userLogged.setTipo("usuario");
 				break;
 			case "twitter":
+				userLogged.setIdSocial(profile.get("id").toString());
 				userLogged.setNombre(profile.get("name").toString());
 				//userLogged.setApellido(profile.get("family_name").toString());
-				//userLogged.setEmail(profile.get("email").toString());
+				if(profile.get("email") != null) userLogged.setEmail(profile.get("email").toString());
 				userLogged.setActivo(true);
 				userLogged.setTipo("usuario");
 				break;
@@ -161,11 +164,11 @@ public class OAuth2CallbackServlet extends HttpServlet {
 	      
 	      ConnectDB con = new ConnectDB ();
           
-	      String mycad = "select * from usuario where email='"+profile.get("email")+"'";
+	      String mycad = "select * from usuario where idSocial='"+profile.get("id")+"'";
           
 	      if(!con.exists(mycad)){
 	    	  int rsConsulta = 0;
-	          String cadena= "insert into usuario values(null,'"+userLogged.getNombre()+"','"+userLogged.getApellido()+"','"+userLogged.getEmail()+"','"+userLogged.getPassword()+"','"+userLogged.getToken()+"','1','usuario')";
+	          String cadena= "insert into usuario values(null,'"+userLogged.getIdSocial()+"','"+userLogged.getNombre()+"','"+userLogged.getApellido()+"','"+userLogged.getEmail()+"','"+userLogged.getPassword()+"','"+userLogged.getToken()+"','1','usuario')";
 	          System.out.println(cadena);
 	               rsConsulta = con.InsertaDatos(cadena);
 	          

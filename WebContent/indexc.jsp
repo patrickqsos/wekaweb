@@ -50,29 +50,29 @@
       <div class="container">
         <h1>Bienvenido</h1>
         <p>El presente proyecto académico es una interface para el uso de la herramienta Weka, en un entorno Cloud Computing basado en el modelo SaaS.</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" role="button" href="#ctnMore">Ver mas &raquo;</a></p>
       </div>
     </div>
 
     <div class="container">
       <!-- Example row of columns -->
        
-      <div class="row">
+      <div class="row" id="ctnMore">
         <div class="col-md-4">
           <h2>Mineria de datos</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
+          <p>Es el proceso de detectar la información procesable de los conjuntos grandes de datos. Utiliza el análisis matemático para deducir los patrones y tendencias que existen en los datos. Normalmente, estos patrones no se pueden detectar mediante la exploración tradicional de los datos porque las relaciones son demasiado complejas o porque hay demasiado datos. Estos patrones y tendencias se pueden recopilar y definir como un modelo de minería de datos.</p>
+          <!--  <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p> -->
        	</div>
        	<div class="col-md-4">
           <h2>Weka</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
-        </div>
+          <p>Corresponde a las siglas en inglés de Waikato Environment for Knowledge Analysis. Es una herramienta de software desarrollada en Java por la Universidad de Waikato (Nueva Zelanda). Esta herramienta contiene principalmente algoritmos de Machine Learning usados en el proceso de la minería de datos. Weka incluye herramientas para el pre procesamiento de los datos (filtros), clasificación (árboles, tablas), clustering, reglas de asociación y adicionalmente, diversas formas de visualización de los datos, tanto en el inicio del proceso de carga de datos, como después de haber aplicado un algoritmo. </p>
+          <!--  <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p> -->
+       	</div>
         <div class="col-md-4">
           <h2>Cloud Computing</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p>
-        </div>
+          <p>El cloud computing consiste en la posibilidad de ofrecer servicios a través de Internet, es una tecnología nueva que busca tener todos nuestros archivos e información en Internet y sin depender de poseer la capacidad suficiente para almacenar información. Explica las nuevas posibilidades de forma de negocio actual, ofreciendo servicios a través de Internet, conocidos como e-business (negocios por Internet).</p>
+          <!--  <p><a class="btn btn-default" href="#" role="button">Mas info &raquo;</a></p> -->
+       	</div>
       </div>
 	
       <hr>
@@ -90,9 +90,8 @@
   
 	<div class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
-      <p class="navbar-text pull-left">Copyright © 2014 <a href="#">Patricio Quispe Sosa</a></p>
+      <p class="navbar-text pull-left">Copyright © 2014 <a href="">Patricio Quispe Sosa</a></p>
       <p class="navbar-text pull-right"><a href="http://aws.amazon.com/what-is-cloud-computing"><img src="http://awsmedia.s3.amazonaws.com/AWS_Logo_PoweredBy_127px.png" alt="Powered by AWS Cloud Computing"></a></p>
-         
     </div>
     
     

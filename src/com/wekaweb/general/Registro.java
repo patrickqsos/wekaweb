@@ -188,7 +188,7 @@ public class Registro extends HttpServlet {
                     	token = getToken(30);
                     	
                 		int rsConsulta = 0;
-                        String cadena= "insert into usuario values(null,'"+nombre+"','"+apellido+"','"+email+"','"+password+"','"+token+"','0','usuario')";
+                        String cadena= "insert into usuario values(null,null,'"+nombre+"','"+apellido+"','"+email+"','"+password+"','"+token+"','0','usuario')";
                         
                         System.out.println(cadena);
                         rsConsulta = con.InsertaDatos(cadena);

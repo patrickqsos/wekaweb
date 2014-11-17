@@ -3,6 +3,7 @@ package com.wekaweb.beans;
 public class UsuarioBean {
 
 	private String id;
+	private String idSocial;
 	private String nombre;
 	private String apellido;
 	private String email;
@@ -13,6 +14,7 @@ public class UsuarioBean {
 	
 	public UsuarioBean(){
 		this.id = null;
+		this.idSocial = null;
 		this.nombre = null;
 		this.apellido = null;
 		this.email = null;
@@ -33,6 +35,18 @@ public class UsuarioBean {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+	/**
+	 * @return the idSocial
+	 */
+	public String getIdSocial() {
+		return idSocial;
+	}
+	/**
+	 * @param id the idSocial to set
+	 */
+	public void setIdSocial(String idSocial) {
+		this.idSocial = idSocial;
 	}
 	/**
 	 * @return the nombre
