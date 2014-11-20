@@ -95,6 +95,7 @@
     					<div class="form-group">
     						<div class="col-sm-12">
     							<input class="btn btn-lg btn-block btn-success" id="btnLogin" name="submit" type="submit" value="Iniciar sesion">
+    							<a class="btn btn-lg btn-block btn-primary" href="<%=request.getContextPath()%>/invitado">Iniciar sesion como invitado</a>
     							<p class="help-block famigo-help-block">¿No tienes una cuenta? <a href="<%=request.getContextPath()%>/Registro">Registrarse.</a></p>
     							<p class="help-block famigo-help-block">O inicia sesion con: <a id="fbLogin" href="<%=request.getContextPath()%>/Login?type=facebook" class="btn btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a>&nbsp;<a id="googleLogin" href="<%=request.getContextPath()%>/Login?type=google" class="btn btn-social-icon btn-google-plus"><i class="fa fa-google-plus"></i></a>&nbsp;<a href="<%=request.getContextPath()%>/Login?type=twitter" id="twitterLogin" class="btn btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></a></p>
     							<!-- <p class="help-block famigo-help-block"><a href="/login/forgot/">Olvide mi password</a></p> -->

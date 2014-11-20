@@ -11,23 +11,24 @@
     <meta name="author" content="Patricio Quispe Sosa">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Admin Console</title>
+    <title>Pagina de inicio</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="css/bootstrap/sticky-footer-navbar.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link href="css/bootstrap/bootstrap-formhelpers.min.css" rel="stylesheet">
+    
     <script src="js/jquery-1.9.1.js"></script>
     <script src="js/docs.min.js"></script>
 	
   </head>
 
   <body data-spy="scroll" data-target="#docs">
-	<jsp:useBean id="usuario" class="com.wekaweb.beans.UsuarioBean" scope="session" />
-        
+	    
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-inverse " role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top navbar-inverse " role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -37,42 +38,37 @@
             <span class="icon-bar"></span>
           </button>
           <img src='images/cloud3.png' class='img-responsive' style="float: left; width: 50px; display: inline-block;padding-right: 5px;"/>
-          <a class="navbar-brand" href="<%=request.getContextPath()%>/admin?action=index">Weka Web Application</a>
+          <a class="navbar-brand" href="<%=request.getContextPath()%>/invitado?action=index">Weka Web Application</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <!--  
-            <li><a href="<%=request.getContextPath()%>/admin?action=index">Home</a></li>
+            <li><a href="<%=request.getContextPath()%>/invitado?action=index">Home</a></li>
             -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle active" data-toggle="dropdown">Datasets<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="<%=request.getContextPath()%>/admin?action=importar">Importar</a></li>
-                <li><a href="<%=request.getContextPath()%>/admin?action=exportar">Exportar</a></li>
-                <li><a href="<%=request.getContextPath()%>/admin?action=generar">Generar</a></li>
+                <li class="disabled"><a href="#">Importar</a></li>
+                <li class="disabled"><a href="#">Exportar</a></li>
+                <li class="disabled"><a href="#">Generar</a></li>
              </ul>
             </li>
-              
             <li class="dropdown">
               <a href="#" class="dropdown-toggle active" data-toggle="dropdown">Preparar datos<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="<%=request.getContextPath()%>/admin?action=editar">Editar dataset</a></li>
-                <li><a href="<%=request.getContextPath()%>/admin?action=preprocess">Filtros - atributos</a></li>
+                <li><a href="<%=request.getContextPath()%>/invitado?action=editar">Ver dataset</a></li>
+                <li class="disabled"><a href="#">Filtros - atributos</a></li>
              </ul>
             </li>
-            
-            <li><a href="<%=request.getContextPath()%>/admin?action=clasificacion">Clasificacion</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=clustering">Clustering</a></li>
-            <li><a href="<%=request.getContextPath()%>/admin?action=asociacion">Asociacion</a></li>
-            
+            <li><a href="<%=request.getContextPath()%>/invitado?action=clasificacion">Clasificacion</a></li>
+            <li><a href="<%=request.getContextPath()%>/invitado?action=clustering">Clustering</a></li>
+            <li><a href="<%=request.getContextPath()%>/invitado?action=asociacion">Asociacion</a></li>
           </ul>
           <c:choose>
 	    	<c:when test="${empty name}">
 	    		<ul class="nav navbar-nav navbar-right">
-		            <form class="navbar-form navbar-right" role="form" method="post" action="Logout">
-		            	<input type="submit" class="btn btn-danger" name="submit" value="Cerrar sesion" />
-		          	</form>
-		          </ul>
+		            <a class="btn btn-primary navbar-btn" href="<%=request.getContextPath()%>/Registro">Registrarse</a>
+				  </ul>
 			</c:when>
 			<c:otherwise>
 				  <ul class="nav navbar-nav navbar-right">
@@ -127,9 +123,9 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
-      <!-- admin component for a primary marketing message or call to action -->
+      <!-- invitado component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Hola <jsp:getProperty property="nombre" name="usuario"/> !</h1>
+        <h1>Ingresaste como invitado!</h1>
         <!--  
         <c:choose>
 	    	<c:when test="${empty name}">

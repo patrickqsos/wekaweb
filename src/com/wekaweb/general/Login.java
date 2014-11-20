@@ -161,7 +161,7 @@ public class Login extends HttpServlet {
 	                	usuarioDB.setTipo(rsConsulta.getString("tipo"));
 	                	
 	                	if(emailLogin.equals(usuarioDB.getEmail())&& passwordLogin.equals(usuarioDB.getPassword())){
-	                		if(usuarioDB.getTipo().equals("root")){
+	                		if(usuarioDB.getTipo().equals("admin")){
 		                		HttpSession session = request.getSession();
 		                        session.setAttribute("usuario", usuarioDB);
 		                        //setting session to expiry in 30 mins
@@ -171,9 +171,8 @@ public class Login extends HttpServlet {
 		                        response.addCookie(userEmail);
 		                        //response.sendRedirect("LoginSuccess.jsp");
 		                        
-		                		dispatcher = request.getRequestDispatcher("/Administrador");
-		                		dispatcher.forward(request,response); 
-	                		}
+		                        response.sendRedirect(request.getContextPath()+"/admin");
+			         		}
 	                		else{
 	                			//se valida si es que la cuenta esta activa
 	                			if(usuarioDB.isActivo()){

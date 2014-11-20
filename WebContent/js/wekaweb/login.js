@@ -4,13 +4,10 @@
 
 $(document).ready(function() {
 	
-	$('#fbLogin').on('click',function(){
+	$('#btnInvitado').on('click',function(){
 		//alert('fb');
+		$.post( "invitado" );
 	});
 	
-	$('#googleLogin').on('click',function(){
-		//alert('fb');
-		
-		
-	});
+	
 });
