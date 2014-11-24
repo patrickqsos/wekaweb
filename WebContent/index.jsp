@@ -50,7 +50,7 @@
       <div class="container">
         <h1>Bienvenido</h1>
         <p>El presente proyecto académico es una interface para el uso de la herramienta Weka, en un entorno Cloud Computing basado en el modelo SaaS.</p>
-        <p><a class="btn btn-primary btn-lg" role="button" href="#ctnMore">Ver mas &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" role="button" href="#prezi">Ver presentacion &raquo;</a></p>
       </div>
     </div>
 
@@ -75,6 +75,9 @@
        	</div>
       </div>
 	
+		<div class="row">
+			<iframe id="prezi" src="http://prezi.com/embed/ft-5hxzuaf8z/?bgcolor=ffffff&amp;lock_to_path=1&amp;autoplay=0&amp;autohide_ctrls=0&amp;features=undefined&amp;token=undefined&amp;disabled_features=undefined" width="100%" height="800" frameBorder="0" webkitAllowFullScreen mozAllowFullscreen allowfullscreen></iframe>
+		</div>
       <hr>
 
       

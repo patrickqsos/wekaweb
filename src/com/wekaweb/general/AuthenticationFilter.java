@@ -32,12 +32,12 @@ public class AuthenticationFilter implements Filter {
        
         String urls = fConfig.getInitParameter("avoid-urls");
         
-        System.out.println(urls);
+        //System.out.println(urls);
         urlList = new ArrayList<String>();
         blist = new ArrayList<String>();
         
         urlList.add(urls);
-        urlList.add("/indexc.jsp");
+        urlList.add("/index.jsp");
         //blist.add("/indexc.jsp");
         
         

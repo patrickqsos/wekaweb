@@ -47,8 +47,8 @@
     <servlet-class>com.wekaweb.usuario.Main</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>DatasetAdmin</servlet-name>
-    <servlet-class>com.wekaweb.administrador.DatasetAdmin</servlet-class>
+    <servlet-name>Invitado</servlet-name>
+    <servlet-class>com.wekaweb.invitado.Invitado</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Dataset</servlet-name>
@@ -58,6 +58,8 @@
     <servlet-name>OAuth2CallbackServlet</servlet-name>
     <servlet-class>com.wekaweb.helpers.OAuth2CallbackServlet</servlet-class>
   </servlet>
+
+  
   <filter>
     <filter-name>RequestLoggingFilter</filter-name>
     <filter-class>com.wekaweb.general.RequestLoggingFilter</filter-class>
