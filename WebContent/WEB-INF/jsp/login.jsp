@@ -79,7 +79,7 @@
     							<label for="inputEmail">Email</label>
     						</div>
     						<div class="col-sm-8">
-    							<input class="form-control" id="inputEmail" name="inputEmail"  placeholder="alguien@ejemplo.com" type="email" required>
+    							<input  class="form-control" id="inputEmail" name="inputEmail"  placeholder="alguien@ejemplo.com" type="email" required>
     							<div class="help-block with-errors"></div>
     						</div>
     					</div>
@@ -88,7 +88,7 @@
     							<label for="inputPassword">Password</label>
     						</div>
     						<div class="col-sm-8">
-    							<input class="form-control" id="inputPassword" name="inputPassword" placeholder="password" type="password" required>
+    							<input  class="form-control" id="inputPassword" name="inputPassword" placeholder="password" type="password" required>
     							<div class="help-block with-errors"></div>
     						</div>
     					</div> 

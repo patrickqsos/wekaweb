@@ -143,6 +143,7 @@
 					  <div class="btn-group">
 					    <button id="btnImprimir" type="button" class="btn btn-default" disabled="disabled"><span class="glyphicon glyphicon-print"></span> Imprimir</button>
 					  </div>
+					 <!--  
 					  <div class="btn-group">
 					    <button id="btnImportar" data-loading-text="Importando..." type="button" class="btn btn-default" disabled="disabled"><span class="glyphicon glyphicon-upload"></span> Importar</button>
 					  </div>
@@ -162,6 +163,7 @@
 					          <li><a class="typeFile" id="xrff.gz" href="#">XRFF data files (*.xrff.gz)</a></li>
 					    </ul>
 					  </div>
+					  -->
 					</div>
 				</div>
 				<div class="form-group">

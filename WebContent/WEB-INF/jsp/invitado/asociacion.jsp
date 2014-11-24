@@ -43,7 +43,7 @@
 		    return tree;
 		}
 	</script>
-	<script src="js/wekaweb/asociacion.js"></script>
+	<script src="js/wekaweb/asociacionInvitado.js"></script>
   </head>
 
   <body>

@@ -42,7 +42,7 @@
 	    return tree;
    	}
 	</script>
-	<script src="js/wekaweb/clustering.js"></script>
+	<script src="js/wekaweb/clusteringInvitado.js"></script>
   </head>
 
   <body>

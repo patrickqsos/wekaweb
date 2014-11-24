@@ -174,6 +174,7 @@
         		<input id="inputDataset" type="hidden">  
         		<input id="inputAttribute" type="hidden" value="false">  
         		<input id="inputFilter" type="hidden">  
+        		<input id="inputFilterName" type="hidden">  
         		
         		<div class="form-group">
  		       		<button id="btnApply" data-loading-text="Trabajando..." type="button" class="btn btn-success btn-block">Apply</button>

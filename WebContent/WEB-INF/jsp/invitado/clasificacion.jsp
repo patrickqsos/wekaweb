@@ -41,7 +41,7 @@
 	    return tree;
 	}
 	</script>
-    <script src="js/wekaweb/clasificacion.js"></script>
+    <script src="js/wekaweb/clasificacionInvitado.js"></script>
   </head>
 
   <body>

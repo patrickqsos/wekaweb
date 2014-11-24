@@ -35,7 +35,11 @@
 		$('#treeFilters').on('nodeSelected', function(event, node) {
 		    
 			var filter = node.className;
+			var filterName = node.text;
+			console.log(filterName);
 		    $('#inputFilter').val(filter);
+		    $('#inputFilterName').val(filterName);
+		    
 		    $.ajax({
            		type: 'post',
            		url: 'Dataset',
@@ -293,6 +297,7 @@
 		$('#btnApply').click(function () {
 			var dataset = $('#inputDataset').val();
 			var filter = $('#inputFilter').val();
+			var filterName = $('#inputFilterName').val();
 			
 			$(this).button('loading');
 			
@@ -311,6 +316,7 @@
 	           			action: 'filter',
 	           			dataset: dataset,
 	           			filter: filter,
+	           			filterName: filterName,
 	           		//	tree: JSON.stringify(tree),
 	           		},
 	           		beforeSend: function(){

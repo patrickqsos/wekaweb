@@ -54,6 +54,7 @@ import weka.core.CapabilitiesHandler;
 import weka.core.DenseInstance;
 import weka.core.Instances;
 import weka.core.MultiInstanceCapabilitiesHandler;
+import weka.core.OptionHandler;
 import weka.core.Utils;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.C45Loader;
@@ -1186,7 +1187,7 @@ public class Dataset extends HttpServlet {
 					for(String atributo:attrRemove){
 						try {
 							dataAttrFilter.deleteAttributeAt(dataAttrFilter.attribute(atributo).index());
-							updateDataset(dataAttrFilter, response.getWriter(), (String) session.getAttribute("nombreTabla"));
+							updateClass(dataAttrFilter, response.getWriter(), (String) session.getAttribute("nombreTabla"));
 							session.setAttribute("dataAttrFilter", dataAttrFilter);
 					        
 						} catch (Exception e) {
@@ -1279,10 +1280,11 @@ public class Dataset extends HttpServlet {
 					break;
 					
 				case "filter":
-					//String datasetCluster = request.getParameter("dataset");
+					String aux = request.getParameter("dataset");
 					Instances dataFilter = (Instances) session.getAttribute("dataAttrFilter");
 					String filter = request.getParameter("filter");
-	
+					String filterName = request.getParameter("filterName");
+					
 					try {
 						Object filterAlgoritmo = Class.forName(filter).newInstance();
 						BeanInfo bi = Introspector.getBeanInfo(filterAlgoritmo.getClass());
@@ -1295,8 +1297,23 @@ public class Dataset extends HttpServlet {
 					        	meth.invoke(filterAlgoritmo, dataFilter);
 					        	Instances newData = Filter.useFilter(dataFilter, (Filter) filterAlgoritmo);
 					        	
+					        	String newName = aux+"_"+filterName;
+					    		String newDesc = "Dataset filtrado con el algoritmo "+filter;
+					    		
+					    		PrintWriter newp = response.getWriter();
+					    		UsuarioTablaBean newDatadb = new UsuarioTablaBean();
+								newDatadb.setIdUsuario(usuario.getId());
+								newDatadb.setNombre(aux+"_"+filterName);
+				            	newDatadb.setTabla(newName);
+				            	newDatadb.setDescripcion(newDesc);
+				            	newDatadb.setRelation(newData.relationName());
+				            	newDatadb.setClassIndex(newData.classIndex());
+				                newDatadb.setOrigen("Dataset filtrado");
+				                saveDataset(newDatadb, newData, newp, "filtered");
+								
 					        	
-					        	response.getWriter().println("El filtro se aplico corrrectamente");
+					        	
+					        	//response.getWriter().println("El filtro se aplico corrrectamente");
 					        	//System.out.println(newData.numAttributes());
 					        }
 					      }
@@ -1325,7 +1342,7 @@ public class Dataset extends HttpServlet {
 					  dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
 		              dbl.setQuery("select * from "+datasetCluster);
 					  dbl.connectToDatabase();
-					  Instances dataForCluster = dbl.getDataSet();
+					  Instances dataForAsoc = dbl.getDataSet();
 					  
 					  ClusterEvaluation eval = new ClusterEvaluation();
 					
@@ -1338,9 +1355,26 @@ public class Dataset extends HttpServlet {
 						        Method meth = method.getMethod();
 						        if (name.equals("buildClusterer")) {
 						        	
-						        	meth.invoke(fullAlgoritmoCluster, dataForCluster);
+						        	meth.invoke(fullAlgoritmoCluster, dataForAsoc);
 						        	eval.setClusterer((Clusterer) fullAlgoritmoCluster);
-									eval.evaluateClusterer(dataForCluster);
+									eval.evaluateClusterer(dataForAsoc);
+									
+									response.getWriter().println("=== Run information ===\n\n");
+									response.getWriter().println("Scheme:       " + fullAlgoritmoCluster.getClass().getName());
+						            
+						            response.getWriter().println("\n");
+						            response.getWriter().println("Relation:     " + dataForAsoc.relationName() + '\n');
+						            response.getWriter().println("Instances:    " + dataForAsoc.numInstances() + '\n');
+						            response.getWriter().println("Attributes:   " + dataForAsoc.numAttributes() + '\n');
+						            if (dataForAsoc.numAttributes() < 100) {
+						              for (int i = 0; i < dataForAsoc.numAttributes(); i++) {
+						            	  response.getWriter().println("              " + dataForAsoc.attribute(i).name()
+						                  + '\n');
+						              }
+						            }
+						            response.getWriter().println("=== Classifier model (full training set) ===\n\n");
+						            //response.getWriter().println(clas.toString() + "\n");
+						            
 									response.getWriter().println(eval.clusterResultsToString());
 									
 						           
@@ -1368,13 +1402,28 @@ public class Dataset extends HttpServlet {
 					  dbl.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
 		              dbl.setQuery("select * from "+datasetAsoc);
 					  dbl.connectToDatabase();
-					  Instances dataForAsoc = dbl.getDataSet();
+					  Instances dataForAsociacion = dbl.getDataSet();
 					  
 					  AssociatorEvaluation evalAsoc = new AssociatorEvaluation();
 				      
 					  try {
 							Object fullAlgoritmoAsoc = Class.forName(algoritmoAsoc).newInstance();
-							evalAsoc.evaluate((Associator) fullAlgoritmoAsoc,dataForAsoc);
+							evalAsoc.evaluate((Associator) fullAlgoritmoAsoc,dataForAsociacion);
+							
+							response.getWriter().println("=== Run information ===\n\n");
+							response.getWriter().println("Scheme:       " + fullAlgoritmoAsoc.getClass().getName());
+				            
+				            response.getWriter().println("\n");
+				            response.getWriter().println("Relation:     " + dataForAsociacion.relationName() + '\n');
+				            response.getWriter().println("Instances:    " + dataForAsociacion.numInstances() + '\n');
+				            response.getWriter().println("Attributes:   " + dataForAsociacion.numAttributes() + '\n');
+				            if (dataForAsociacion.numAttributes() < 100) {
+				              for (int i = 0; i < dataForAsociacion.numAttributes(); i++) {
+				            	  response.getWriter().println("              " + dataForAsociacion.attribute(i).name()
+				                  + '\n');
+				              }
+				            }
+				            
 							response.getWriter().println(evalAsoc.toSummaryString());
 						} catch (Exception e2) {
 							System.out.println(e2.getClass());
@@ -1426,7 +1475,26 @@ public class Dataset extends HttpServlet {
 						Classifier clas = (Classifier) fullAlgoritmoClas;
 						clas.buildClassifier(dataForClas);
 						evalClas.evaluateModel((Classifier) fullAlgoritmoClas,dataForClas);
+						
+						response.getWriter().println("=== Run information ===\n\n");
+						response.getWriter().println("Scheme:       " + fullAlgoritmoClas.getClass().getName());
+			            
+			            response.getWriter().println("\n");
+			            response.getWriter().println("Relation:     " + dataForClas.relationName() + '\n');
+			            response.getWriter().println("Instances:    " + dataForClas.numInstances() + '\n');
+			            response.getWriter().println("Attributes:   " + dataForClas.numAttributes() + '\n');
+			            if (dataForClas.numAttributes() < 100) {
+			              for (int i = 0; i < dataForClas.numAttributes(); i++) {
+			            	  response.getWriter().println("              " + dataForClas.attribute(i).name()
+			                  + '\n');
+			              }
+			            }
+			            response.getWriter().println("=== Classifier model (full training set) ===\n\n");
+			            response.getWriter().println(clas.toString() + "\n");
 						response.getWriter().println(evalClas.toSummaryString());
+						response.getWriter().println(evalClas.toClassDetailsString());
+						response.getWriter().println(evalClas.toMatrixString());
+						
 					}catch (Exception e2) {
 						System.out.println(e2.getClass());
 						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -1497,6 +1565,9 @@ public class Dataset extends HttpServlet {
 	        	if(action.equals("importGenerated")){
 	        		out.println("El dataset generado se importo exitosamente");
 	        	}
+	        	if(action.equals("filtered")){
+	        		out.println("El filtro se aplico corrrectamente y se creo un nuevo dataset");
+	        	}
 	        	else{
 	        		JSONObject dataResult = new JSONObject();
 		        	dataResult.put("nombre", tmpData.getNombre());
@@ -1547,6 +1618,41 @@ public class Dataset extends HttpServlet {
         	out.flush();
         	con.closeConnection();	
         }
+	}
+	
+	protected void updateClass(Instances data,PrintWriter out, String nombreTabla){
+		ConnectDB con = new ConnectDB ();
+        //int  rsConsulta = 0;
+        //conexion a bd
+		try{
+        	DatabaseBean credentials = VcapHelper.parseVcap();
+	        DatabaseSaver save = new DatabaseSaver();
+	        save.setUrl("jdbc:mysql://"+credentials.getHostname()+"/"+credentials.getName());
+	        save.setUser(credentials.getUsername());
+	        save.setPassword(credentials.getPassword());
+	        save.setInstances(data);
+	        save.setRelationForTableName(false);
+	        save.setTableName(nombreTabla);
+	        save.connectToDatabase();
+	        save.setTruncate(true);
+	        save.writeBatch();
+	        //String cadena= "insert into usuario_tabla values('"+tmpData.getIdUsuario()+"','"+tmpData.getNombre()+"','"+tmpData.getTabla()+"','"+tmpData.getRelation()+"','"+tmpData.getClassIndex()+"','"+tmpData.getDescripcion()+"','"+tmpData.getOrigen()+"' )";
+	        
+	    	String cadn= "update  usuario_tabla set classindex='-1' where tabla ='"+nombreTabla+"'";
+        	System.out.println(cadn);
+        	con.InsertaDatos(cadn);
+        
+	    	out.print("Dataset actualizado");
+	    }
+        catch(Exception e){
+        	out.print("Hubo un error al actualizar el dataset");
+        }finally{
+        	out.flush();
+        	con.closeConnection();	
+        }
+		
+		
+        
 	}
 	
 	protected String getGlobalInfoTest(Object object, boolean addCapabilities){
